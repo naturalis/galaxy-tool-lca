@@ -1,0 +1,31 @@
+<tool id="lca" name="lowest common ancestor">
+<description>Find lowest common ancestor</description>
+<command interpreter="bash">
+lca.sh
+$input<!--blastoutput file input-->
+$output
+$bitscore
+$identity
+
+</command>
+
+<inputs>
+<param format="tabular" name="input" type="data" label="BLAST output file"/>
+<param name="bitscore" type="float" label="Top bitscore percentage cutoff"  value="8" min="1" max="100"/>
+<param name="identity" type="float" label="Minimum identity"  value="90" min="1" max="100"/>
+</inputs>
+
+	
+<outputs>
+	<data format="tabular" name="output" label="$input.display_name lca" />
+</outputs>
+<tests>
+<test>
+<param name="test_input" value="test_input.txt"/>
+<output name="test_outout" file="test_output.txt"/>
+</test>
+</tests>
+<help>
+Find lca from blast output
+</help>
+</tool>
