@@ -20,7 +20,7 @@ def get_lca(otu):
         highestScore = bitscore if bitscore > highestScore else highestScore
     topTreshold = float(highestScore) * (1 - (float(args.top)/100))
 
-    #place the taxon comlumn in lists for the zip funtion
+    #place the taxon column in lists for the zip function
     taxons = []
     for tax in otu:
         if float(tax[7]) >= topTreshold and float(tax[3]) >= float(args.id):
@@ -51,29 +51,30 @@ def linecount():
     return i
 
 def lca():
+    """
+    This method loops trough the BLAST output and all the hits per otu will be the the input for the get_lca method.
+    The first line starts with "Query ID", this is the header so it will not be used. Every line is stored in the
+    otuLines variable.
+    """
     lastLineCount = linecount()
     with open(args.input, "r") as input:
         otuList = []
         otuLines = []
         for num, line in enumerate(input):
-            if line.split("\t")[0] not in otuList and num != 0 or num == lastLineCount:
-
-                if num == lastLineCount:
+            if line.split("\t")[0].strip() != "Query ID":
+                if line.split("\t")[0] not in otuList and num != 1 or num == lastLineCount:
+                    if num == lastLineCount:
+                        otuList.append(line.split("\t")[0])
+                        otuLines.append(line.split("\t"))
+                    #do stuff with the otu 'block'
+                    get_lca(otuLines)
+                    otuList = []
+                    otuLines = []
                     otuList.append(line.split("\t")[0])
                     otuLines.append(line.split("\t"))
-                #do stuff with the otu 'block'
-                get_lca(otuLines)
-                otuList = []
-                otuLines = []
-                otuList.append(line.split("\t")[0])
-                otuLines.append(line.split("\t"))
-            else:
-                otuList.append(line.split("\t")[0])
-                otuLines.append(line.split("\t"))
-
-
-
-
+                else:
+                    otuList.append(line.split("\t")[0])
+                    otuLines.append(line.split("\t"))
 
 def main():
     lca()
