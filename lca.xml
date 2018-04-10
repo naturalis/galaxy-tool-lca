@@ -6,13 +6,35 @@ $input<!--blastoutput file input-->
 $output
 $bitscore
 $identity
+$coverage
+$setting_mode.best_hit
+#if $setting_mode.best_hit == "yes"
+	$setting_mode.tophitid
+	$setting_mode.tophitcoverage
+#end if
+
 
 </command>
-
+	<macros>
+	<macro name="best_hit_params">
+		<param name="tophitid" type="float" label="Identity treshold" value="100" min="1" max="100"/>
+		<param name="tophitcoverage" type="float" label="Query coverage treshold"  value="100" min="1" max="100"/>
+	</macro>
+	</macros>
 <inputs>
 <param format="tabular" name="input" type="data" label="BLAST output file"/>
 <param name="bitscore" type="float" label="Top bitscore percentage cutoff"  value="8" min="1" max="100"/>
-<param name="identity" type="float" label="Minimum identity"  value="90" min="1" max="100"/>
+<param name="identity" type="float" label="Minimum identity"  value="80" min="1" max="100"/>
+<param name="coverage" type="float" label="Minimum coverage"  value="70" min="1" max="100"/>
+	<conditional name="setting_mode">
+					<param name="best_hit" type="select" multiple="false" label="Settings mode">
+						<option value="yes" selected="true">Output the best hit as species if it is above the choosen treshold</option>
+						<option value="no">Check lca on all hits</option>
+					</param>
+					<when value="yes">
+						<expand macro="best_hit_params"/>
+					</when>
+				</conditional>
 </inputs>
 
 	

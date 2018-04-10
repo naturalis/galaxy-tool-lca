@@ -10,6 +10,8 @@ parser.add_argument('-b', '--bitscore', metavar='bitscore top percentage treshol
 			help='top hits to find the lowest common ancestor', required=True)
 parser.add_argument('-id', metavar='identity', dest='id', type=str,
 			help='identity treshold', required=True)
+parser.add_argument('-cov', metavar='coverage', dest='cov', type=str,
+			help='coverage treshold', required=True)
 parser.add_argument('-t','--tophit', metavar='tophit', dest='tophit', type=str,
 			help='Check de best hit first, if it is above the gives treshold the tophit will become the output', required=False, choices=['no', 'yes'], nargs='?', default='no')
 parser.add_argument('-tid', metavar='top_hit_identity', dest='topid', type=str,
@@ -30,7 +32,7 @@ def get_lca(otu):
     #place the taxon column in lists for the zip function
     taxons = []
     for tax in otu:
-        if float(tax[7]) >= topTreshold and float(tax[3]) >= float(args.id):
+        if float(tax[7]) >= topTreshold and float(tax[3]) >= float(args.id) and float(tax[5]) >= float(args.cov):
             taxons.append(map(str.strip, tax[-1].split("/")))
     #use zip function for all* taxon lists
     zipper = zip(*taxons)
