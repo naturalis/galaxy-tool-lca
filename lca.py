@@ -10,6 +10,13 @@ parser.add_argument('-b', '--bitscore', metavar='bitscore top percentage treshol
 			help='top hits to find the lowest common ancestor', required=True)
 parser.add_argument('-id', metavar='identity', dest='id', type=str,
 			help='identity treshold', required=True)
+parser.add_argument('-t','--tophit', metavar='tophit', dest='tophit', type=str,
+			help='Check de best hit first, if it is above the gives treshold the tophit will become the output', required=False, choices=['no', 'yes'], nargs='?', default='no')
+parser.add_argument('-tid', metavar='top_hit_identity', dest='topid', type=str,
+			help='identity treshold for the tophit', required=False, default='100')
+parser.add_argument('-tcov', metavar='top_hit_coverage', dest='topcoverage', type=str,
+			help='query coverage treshold for the tophit', required=False,  default='100')
+
 args = parser.parse_args()
 
 def get_lca(otu):
@@ -36,12 +43,30 @@ def get_lca(otu):
         count += 1
     taxonomy = map(str.strip, otu[0][-1].split("/"))[:count]
     taxonLevels = ["kingdom", "phylum", "class", "order", "family", "genus", "species"]
+    if taxonomy:
+        return otu[0][0] + "\t" + taxonLevels[len(taxonomy) - 1] + "\t" + taxonomy[-1] + "\t" + "/".join(taxonomy) + "\tlca\n"
+    else:
+        return otu[0][0] + "\t" + "no identification" + "\t" + "" + "\t" + "" + "\tno identification\n"
 
+def check_best_hit(otu):
+    if float(otu[0][3]) >= float(args.topid) and float(otu[0][5]) >= float(args.topcoverage):
+        taxonomy = map(str.strip, otu[0][-1].split("/"))
+        return otu[0][0] + "\tspecies\t" + taxonomy[-1] + "\t" + "/".join(taxonomy) + "\tbest hit\n"
+    else:
+        return False
+
+def determine_taxonomy(otu):
     with open(args.output, "a") as output:
-        if taxonomy:
-            output.write(otu[0][0]+"\t"+taxonLevels[len(taxonomy)-1]+"\t"+taxonomy[-1]+"\t"+"/".join(taxonomy)+"\n")
+        if args.tophit == "yes":
+            bestHit = check_best_hit(otu)
+            if bestHit:
+                output.write(bestHit)
+            else:
+                resultingTaxonomy = get_lca(otu)
+                output.write(resultingTaxonomy)
         else:
-            output.write(otu[0][0] + "\t" + "no identification" + "\t" + "" + "\t" + "" + "\n")
+            resultingTaxonomy = get_lca(otu)
+            output.write(resultingTaxonomy)
 
 def linecount():
     i = 0
@@ -67,7 +92,7 @@ def lca():
                         otuList.append(line.split("\t")[0])
                         otuLines.append(line.split("\t"))
                     #do stuff with the otu 'block'
-                    get_lca(otuLines)
+                    determine_taxonomy(otuLines)
                     otuList = []
                     otuLines = []
                     otuList.append(line.split("\t")[0])
