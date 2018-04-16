@@ -18,8 +18,8 @@ sudo chmod 777 galaxy-tool-lca/lca.py
 sudo ln -s /home/galaxy/Tools/galaxy-tool-lca/lca.py /usr/local/bin/lca.py
 ```
 ```
-mv galaxy-tool-lca/lca.sh /home/galaxy/galaxy/tools/identify/
-mv galaxy-tool-lca/lca.xml /home/galaxy/galaxy/tools/identify/
+sudo cp galaxy-tool-lca/lca.sh /home/galaxy/galaxy/tools/identify/lca.sh
+sudo cp galaxy-tool-lca/lca.xml /home/galaxy/galaxy/tools/identify/lca.xml
 ```
 Add the following line to /home/galaxy/galaxy/config/tool_conf.xml
 ```
