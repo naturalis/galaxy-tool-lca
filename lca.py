@@ -47,8 +47,6 @@ def get_lca(otu):
         taxonomy.append(list(set(y))[0])
 
     taxonLevels = ["kingdom", "phylum", "class", "order", "family", "genus", "species"]
-    print taxonomy
-    print otu[0][0]
     if taxonomy:
         return otu[0][0] + "\t" + taxonLevels[len(taxonomy) - 1] + "\t" + taxonomy[-1] + "\t" + " / ".join(taxonomy) + "\tlca\n"
     else:
