@@ -39,11 +39,13 @@ def get_lca(otu):
 
     #find the uniq taxon over all levels, if there are more then one uniq taxon a higher taxon is checked
     count = 0
+    taxonomy = []
     for y in zipper:
         if len(set(y)) > 1:
             break
         count += 1
-    taxonomy = map(str.strip, otu[0][-1].split("/"))[:count]
+        taxonomy.append(list(set(y))[0])
+
     taxonLevels = ["kingdom", "phylum", "class", "order", "family", "genus", "species"]
     if taxonomy:
         return otu[0][0] + "\t" + taxonLevels[len(taxonomy) - 1] + "\t" + taxonomy[-1] + "\t" + "/".join(taxonomy) + "\tlca\n"
