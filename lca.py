@@ -33,7 +33,7 @@ def get_lca(otu):
     taxons = []
     for tax in otu:
         if float(tax[7]) >= topTreshold and float(tax[3]) >= float(args.id) and float(tax[5]) >= float(args.cov):
-            taxons.append(map(str.strip, tax[-1].split("/")))
+            taxons.append(map(str.strip, tax[-1].split(" / ")))
     #use zip function for all* taxon lists
     zipper = zip(*taxons)
 
@@ -47,15 +47,17 @@ def get_lca(otu):
         taxonomy.append(list(set(y))[0])
 
     taxonLevels = ["kingdom", "phylum", "class", "order", "family", "genus", "species"]
+    print taxonomy
+    print otu[0][0]
     if taxonomy:
-        return otu[0][0] + "\t" + taxonLevels[len(taxonomy) - 1] + "\t" + taxonomy[-1] + "\t" + "/".join(taxonomy) + "\tlca\n"
+        return otu[0][0] + "\t" + taxonLevels[len(taxonomy) - 1] + "\t" + taxonomy[-1] + "\t" + " / ".join(taxonomy) + "\tlca\n"
     else:
         return otu[0][0] + "\t" + "no identification" + "\t" + "" + "\t" + "" + "\tno identification\n"
 
 def check_best_hit(otu):
     if float(otu[0][3]) >= float(args.topid) and float(otu[0][5]) >= float(args.topcoverage):
         taxonomy = map(str.strip, otu[0][-1].split("/"))
-        return otu[0][0] + "\tspecies\t" + taxonomy[-1] + "\t" + "/".join(taxonomy) + "\tbest hit\n"
+        return otu[0][0] + "\tspecies\t" + taxonomy[-1] + "\t" + " / ".join(taxonomy) + "\tbest hit\n"
     else:
         return False
 
