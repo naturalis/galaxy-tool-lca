@@ -47,15 +47,23 @@ def get_lca(otu):
         taxonomy.append(list(set(y))[0])
 
     taxonLevels = ["kingdom", "phylum", "class", "order", "family", "genus", "species"]
-    if taxonomy:
-        return otu[0][0] + "\t" + taxonLevels[len(taxonomy) - 1] + "\t" + taxonomy[-1] + "\t" + " / ".join(taxonomy) + "\tlca\n"
+    taxonLevel = len(taxonomy) - 1
+    while len(taxonomy) < 7:
+        taxonomy.append("")
+
+    if all(rank == "" for rank in taxonomy):
+        return otu[0][0] + "\t" + "no identification" + "\t" + "" + 7*"\t" + "" + "\tno identification\n"
     else:
-        return otu[0][0] + "\t" + "no identification" + "\t" + "" + "\t" + "" + "\tno identification\n"
+        if taxonLevel == 6:
+            taxonomy[-1] = ""
+            return otu[0][0] + "\t" + taxonLevels[taxonLevel-1] + "\t" + taxonomy[taxonLevel-1] + "\t" + "\t".join(taxonomy)+"\tlca\n"
+        else:
+            return otu[0][0] + "\t" + taxonLevels[taxonLevel] + "\t" + taxonomy[taxonLevel] + "\t" + "\t".join(taxonomy) + "\tlca\n"
 
 def check_best_hit(otu):
     if float(otu[0][3]) >= float(args.topid) and float(otu[0][5]) >= float(args.topcoverage):
         taxonomy = map(str.strip, otu[0][-1].split("/"))
-        return otu[0][0] + "\tspecies\t" + taxonomy[-1] + "\t" + " / ".join(taxonomy) + "\tbest hit\n"
+        return otu[0][0] + "\tspecies\t" + taxonomy[-1] + "\t" + "\t".join(taxonomy) + "\tbest hit\n"
     else:
         return False
 
@@ -79,12 +87,17 @@ def linecount():
             pass
     return i
 
+def write_header():
+    with open(args.output, "a") as output:
+        output.write("#Query\t#lca rank\t#lca taxon\t#kingdom\t#phylum\t#class\t#order\t#family\t#genus\t#species\t#method\n")
+
 def lca():
     """
     This method loops trough the BLAST output and all the hits per otu will be the the input for the get_lca method.
     The first line starts with "Query ID", this is the header so it will not be used. Every line is stored in the
     otuLines variable.
     """
+    write_header()
     lastLineCount = linecount()
     with open(args.input, "r") as input:
         otuList = []
