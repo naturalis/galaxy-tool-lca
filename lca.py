@@ -18,8 +18,43 @@ parser.add_argument('-tid', metavar='top_hit_identity', dest='topid', type=str,
 			help='identity treshold for the tophit', required=False, default='100')
 parser.add_argument('-tcov', metavar='top_hit_coverage', dest='topcoverage', type=str,
 			help='query coverage treshold for the tophit', required=False,  default='100')
-
+parser.add_argument('-fh', metavar='filter hits', dest='filterHits', type=str,
+			help='filter out hit that contain unwanted taxonomy', required=False, default="",nargs='?')
+parser.add_argument('-flh', metavar='filter lca hits', dest='filterLcaHits', type=str,
+			help='do not use a String in de lca determination', required=False, default="",nargs='?')
 args = parser.parse_args()
+
+def hits_filter_check(filter, line):
+    for x in filter:
+        if x.lower() in line.lower():
+            a = True
+            break
+        else:
+            a = False
+    return a
+
+
+def taxonomy_filter(otu):
+    filterHits = ""
+    if args.filterHits:
+        if args.filterHits[-1].strip() == ",":
+            filterHits = args.filterHits.strip()[:-1]
+        else:
+            filterHits = args.filterHits
+        try:
+            filter = filterHits.split(",")
+        except:
+            filter = [filterHits]
+        filteredOtu = []
+
+        for line in otu:
+            if hits_filter_check(filter, line[-1]):
+                pass
+            else:
+                filteredOtu.append(line)
+        return filteredOtu
+    else:
+        return otu
 
 def get_lca(otu):
     #find highest bitscore and calculate lowest bitscore treshold
@@ -37,10 +72,38 @@ def get_lca(otu):
     #use zip function for all* taxon lists
     zipper = zip(*taxons)
 
+    filter = ""
+    if args.filterLcaHits:
+        if args.filterLcaHits:
+            if args.filterLcaHits.strip()[-1] == ",":
+                filterLcaHits = args.filterLcaHits.strip()[:-1]
+            else:
+                filterLcaHits = args.filterLcaHits
+            try:
+                filter = filterLcaHits.split(",")
+            except:
+                filter = [filterLcaHits]
+
+    filteredZipper = []
+    for level in zipper:
+        filteredRank = []
+        for item in level:
+            #if "unknown" not in item.lower():
+            if args.filterLcaHits:
+                if not hits_filter_check(filter, item):
+                    filteredRank.append(item)
+            else:
+                filteredRank.append(item)
+        if not filteredRank:
+            filteredRank.append("no identification")
+        filteredZipper.append(filteredRank)
+
+
+
     #find the uniq taxon over all levels, if there are more then one uniq taxon a higher taxon is checked
     count = 0
     taxonomy = []
-    for y in zipper:
+    for y in filteredZipper:
         if len(set(y)) > 1:
             break
         count += 1
@@ -49,14 +112,14 @@ def get_lca(otu):
     taxonLevels = ["kingdom", "phylum", "class", "order", "family", "genus", "species"]
     taxonLevel = len(taxonomy) - 1
     while len(taxonomy) < 7:
-        taxonomy.append("")
+        taxonomy.append("no identification")
 
-    if all(rank == "" for rank in taxonomy):
-        return otu[0][0] + "\t" + "no identification" + "\t" + "" + 7*"\t" + "" + "\tno identification\n"
+    if all(rank == "no identification" for rank in taxonomy):
+        return otu[0][0] + "\tno identification\tno identification\t" + "\t".join(taxonomy).strip() + "\tno identification\n"
     else:
         if taxonLevel == 6:
             taxonomy[-1] = ""
-            return otu[0][0] + "\t" + taxonLevels[taxonLevel-1] + "\t" + taxonomy[taxonLevel-1] + "\t" + "\t".join(taxonomy)+"\tlca\n"
+            return otu[0][0] + "\t" + taxonLevels[taxonLevel-1] + "\t" + taxonomy[taxonLevel-1] + "\t" + "\t".join(taxonomy).strip()+"\tno identification\tlca\n"
         else:
             return otu[0][0] + "\t" + taxonLevels[taxonLevel] + "\t" + taxonomy[taxonLevel] + "\t" + "\t".join(taxonomy) + "\tlca\n"
 
@@ -68,17 +131,22 @@ def check_best_hit(otu):
         return False
 
 def determine_taxonomy(otu):
+    filteredOtu = taxonomy_filter(otu)
     with open(args.output, "a") as output:
-        if args.tophit == "yes":
-            bestHit = check_best_hit(otu)
-            if bestHit:
-                output.write(bestHit)
+        if filteredOtu:
+            if args.tophit == "yes":
+                bestHit = check_best_hit(filteredOtu)
+                if bestHit:
+                    output.write(bestHit)
+                else:
+                    resultingTaxonomy = get_lca(filteredOtu)
+                    output.write(resultingTaxonomy)
             else:
-                resultingTaxonomy = get_lca(otu)
+                resultingTaxonomy = get_lca(filteredOtu)
                 output.write(resultingTaxonomy)
         else:
-            resultingTaxonomy = get_lca(otu)
-            output.write(resultingTaxonomy)
+            taxonomy = ["no identification","no identification","no identification","no identification","no identification","no identification","no identification"]
+            output.write(otu[0][0] + "\tno identification\tno identification\t" + "\t".join(taxonomy).strip() + "\tfiltered out\n")
 
 def linecount():
     i = 0

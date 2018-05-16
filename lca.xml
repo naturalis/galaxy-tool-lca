@@ -12,6 +12,8 @@ $setting_mode.best_hit
 	$setting_mode.tophitid
 	$setting_mode.tophitcoverage
 #end if
+$filterhits
+    $filterlcahits
 
 
 </command>
@@ -35,6 +37,8 @@ $setting_mode.best_hit
 						<expand macro="best_hit_params"/>
 					</when>
 				</conditional>
+	<param name="filterhits" type="text" label="Filter hits"  value="environmental"/>
+    <param name="filterlcahits" type="text" label="Filter taxonomy"  value="unknown"/>
 </inputs>
 
 	
