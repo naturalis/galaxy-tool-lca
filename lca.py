@@ -18,97 +18,79 @@ parser.add_argument('-tid', metavar='top_hit_identity', dest='topid', type=str,
 			help='identity treshold for the tophit', required=False, default='100')
 parser.add_argument('-tcov', metavar='top_hit_coverage', dest='topcoverage', type=str,
 			help='query coverage treshold for the tophit', required=False,  default='100')
-parser.add_argument('-fh', metavar='filter hits', dest='filterHits', type=str,
+parser.add_argument('-fh', metavar='filter hits', dest='filterHitsParam', type=str,
 			help='filter out hit that contain unwanted taxonomy', required=False, default="",nargs='?')
 parser.add_argument('-flh', metavar='filter lca hits', dest='filterLcaHits', type=str,
 			help='do not use a String in de lca determination', required=False, default="",nargs='?')
 args = parser.parse_args()
 
-def hits_filter_check(filter, line):
+def filter_check(filterParam, line):
+    filterHitsParam = filterParam.strip()
+    if filterParam[-1] == ",":
+        filterHitsParam = filterParam[:-1]
+    filter = filterHitsParam.split(",")
     for x in filter:
         if x.lower() in line.lower():
-            a = True
+            a = False
             break
         else:
-            a = False
+            a = True
     return a
 
-
-def taxonomy_filter(otu):
-    filterHits = ""
-    if args.filterHits:
-        if args.filterHits[-1].strip() == ",":
-            filterHits = args.filterHits.strip()[:-1]
-        else:
-            filterHits = args.filterHits
-        try:
-            filter = filterHits.split(",")
-        except:
-            filter = [filterHits]
+def remove_hits(otu):
         filteredOtu = []
-
         for line in otu:
-            if hits_filter_check(filter, line[-1]):
-                pass
-            else:
+            if filter_check(args.filterHitsParam, line[-1]):
                 filteredOtu.append(line)
         return filteredOtu
-    else:
-        return otu
 
-def get_lca(otu):
-    #find highest bitscore and calculate lowest bitscore treshold
+def remove_taxon(zippedTaxonomy):
+    filteredZipper = []
+    for level in zippedTaxonomy:
+        filteredRank = []
+        for item in level:
+            if filter_check(args.filterLcaHits, item):
+                filteredRank.append(item)
+        if not filteredRank:
+            filteredRank.append("no identification")
+        filteredZipper.append(filteredRank)
+    return filteredZipper
+
+def check_best_hit(otu):
+    if float(otu[0][3]) >= float(args.topid) and float(otu[0][5]) >= float(args.topcoverage):
+        taxonomy = map(str.strip, otu[0][-1].split("/"))
+        return otu[0][0] + "\tspecies\t" + taxonomy[-1] + "\t" + "\t".join(taxonomy) + "\tbest hit\n"
+    else:
+        return False
+
+def calculate_bitscore_treshold(otu):
     highestScore = 0
     for x in otu:
         bitscore = float(x[7])
         highestScore = bitscore if bitscore > highestScore else highestScore
     topTreshold = float(highestScore) * (1 - (float(args.top)/100))
+    return topTreshold
 
-    #place the taxon column in lists for the zip function
+def zip_taxonomy_column(otu, topTreshold):
     taxons = []
     for tax in otu:
         if float(tax[7]) >= topTreshold and float(tax[3]) >= float(args.id) and float(tax[5]) >= float(args.cov):
             taxons.append(map(str.strip, tax[-1].split(" / ")))
     #use zip function for all* taxon lists
-    zipper = zip(*taxons)
+    zippedTaxonomy = zip(*taxons)
+    return zippedTaxonomy
 
-    filter = ""
-    if args.filterLcaHits:
-        if args.filterLcaHits:
-            if args.filterLcaHits.strip()[-1] == ",":
-                filterLcaHits = args.filterLcaHits.strip()[:-1]
-            else:
-                filterLcaHits = args.filterLcaHits
-            try:
-                filter = filterLcaHits.split(",")
-            except:
-                filter = [filterLcaHits]
-
-    filteredZipper = []
-    for level in zipper:
-        filteredRank = []
-        for item in level:
-            #if "unknown" not in item.lower():
-            if args.filterLcaHits:
-                if not hits_filter_check(filter, item):
-                    filteredRank.append(item)
-            else:
-                filteredRank.append(item)
-        if not filteredRank:
-            filteredRank.append("no identification")
-        filteredZipper.append(filteredRank)
-
-
-
-    #find the uniq taxon over all levels, if there are more then one uniq taxon a higher taxon is checked
+def find_lca(zippedTaxonomy):
     count = 0
     taxonomy = []
-    for y in filteredZipper:
+    for y in zippedTaxonomy:
         if len(set(y)) > 1:
             break
         count += 1
         taxonomy.append(list(set(y))[0])
+    return taxonomy
 
+def generate_output_line(taxonomy, otu):
     taxonLevels = ["kingdom", "phylum", "class", "order", "family", "genus", "species"]
     taxonLevel = len(taxonomy) - 1
     while len(taxonomy) < 7:
@@ -123,30 +105,42 @@ def get_lca(otu):
         else:
             return otu[0][0] + "\t" + taxonLevels[taxonLevel] + "\t" + taxonomy[taxonLevel] + "\t" + "\t".join(taxonomy) + "\tlca\n"
 
-def check_best_hit(otu):
-    if float(otu[0][3]) >= float(args.topid) and float(otu[0][5]) >= float(args.topcoverage):
-        taxonomy = map(str.strip, otu[0][-1].split("/"))
-        return otu[0][0] + "\tspecies\t" + taxonomy[-1] + "\t" + "\t".join(taxonomy) + "\tbest hit\n"
-    else:
-        return False
+def get_lca(otu):
+    #find highest bitscore and calculate lowest bitscore treshold
+    topTreshold = calculate_bitscore_treshold(otu)
+
+    #place the taxon column in lists for the zip function
+    zippedTaxonomy = zip_taxonomy_column(otu, topTreshold)
+
+    #filter the taxonomy levels, taxons that match 'filter lca hits' parameters are removed
+    if args.filterLcaHits:
+        zippedTaxonomy = remove_taxon(zippedTaxonomy)
+    #find the lca and make the line for the output file
+    outputLine = generate_output_line(find_lca(zippedTaxonomy), otu)
+
+    return outputLine
 
 def determine_taxonomy(otu):
-    filteredOtu = taxonomy_filter(otu)
+    if args.filterHitsParam.strip():
+        otu = remove_hits(otu)
     with open(args.output, "a") as output:
-        if filteredOtu:
+        if otu:
             if args.tophit == "yes":
-                bestHit = check_best_hit(filteredOtu)
+                bestHit = check_best_hit(otu)
                 if bestHit:
+                    pass
                     output.write(bestHit)
                 else:
-                    resultingTaxonomy = get_lca(filteredOtu)
+                    resultingTaxonomy = get_lca(otu)
                     output.write(resultingTaxonomy)
             else:
-                resultingTaxonomy = get_lca(filteredOtu)
+                resultingTaxonomy = get_lca(otu)
                 output.write(resultingTaxonomy)
         else:
-            taxonomy = ["no identification","no identification","no identification","no identification","no identification","no identification","no identification"]
-            output.write(otu[0][0] + "\tno identification\tno identification\t" + "\t".join(taxonomy).strip() + "\tfiltered out\n")
+            taxonomy = ["no identification", "no identification", "no identification", "no identification",
+                        "no identification", "no identification", "no identification"]
+            output.write(
+                otu[0][0] + "\tno identification\tno identification\t" + "\t".join(taxonomy).strip() + "\tfiltered out\n")
 
 def linecount():
     i = 0
@@ -156,12 +150,15 @@ def linecount():
     return i
 
 def write_header():
+    """
+    Write a header line to the output file
+    """
     with open(args.output, "a") as output:
         output.write("#Query\t#lca rank\t#lca taxon\t#kingdom\t#phylum\t#class\t#order\t#family\t#genus\t#species\t#method\n")
 
 def lca():
     """
-    This method loops trough the BLAST output and all the hits per otu will be the the input for the get_lca method.
+    This method loops trough the BLAST output and all the hits per otu will be the input for the get_lca method.
     The first line starts with "Query ID", this is the header so it will not be used. Every line is stored in the
     otuLines variable.
     """
@@ -176,8 +173,7 @@ def lca():
                     if num == lastLineCount:
                         otuList.append(line.split("\t")[0])
                         otuLines.append(line.split("\t"))
-                    #do stuff with the otu 'block'
-                    determine_taxonomy(otuLines)
+                    determine_taxonomy(otuLines)#find the lca for the query
                     otuList = []
                     otuLines = []
                     otuList.append(line.split("\t")[0])
