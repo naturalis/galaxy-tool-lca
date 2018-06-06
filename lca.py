@@ -58,7 +58,7 @@ def remove_taxon(zippedTaxonomy):
 
 def check_best_hit(otu):
     if float(otu[0][3]) >= float(args.topid) and float(otu[0][5]) >= float(args.topcoverage):
-        taxonomy = map(str.strip, otu[0][-1].split("/"))
+        taxonomy = map(str.strip, otu[0][-1].split(" / "))
         return otu[0][0] + "\tspecies\t" + taxonomy[-1] + "\t" + "\t".join(taxonomy) + "\tbest hit\n"
     else:
         return False
@@ -88,7 +88,15 @@ def find_lca(zippedTaxonomy):
             break
         count += 1
         taxonomy.append(list(set(y))[0])
-    return taxonomy
+    t = True
+    newTaxonomy = []
+    for rev in reversed(taxonomy):
+        if rev == "no identification" and t:
+            pass
+        else:
+            t = False
+            newTaxonomy.append(rev)
+    return list(reversed(newTaxonomy))
 
 def generate_output_line(taxonomy, otu):
     taxonLevels = ["kingdom", "phylum", "class", "order", "family", "genus", "species"]
@@ -122,19 +130,19 @@ def get_lca(otu):
 
 def determine_taxonomy(otu):
     if args.filterHitsParam.strip():
-        otu = remove_hits(otu)
+        otu_filtered = remove_hits(otu)
     with open(args.output, "a") as output:
         if otu:
             if args.tophit == "yes":
-                bestHit = check_best_hit(otu)
+                bestHit = check_best_hit(otu_filtered)
                 if bestHit:
                     pass
                     output.write(bestHit)
                 else:
-                    resultingTaxonomy = get_lca(otu)
+                    resultingTaxonomy = get_lca(otu_filtered)
                     output.write(resultingTaxonomy)
             else:
-                resultingTaxonomy = get_lca(otu)
+                resultingTaxonomy = get_lca(otu_filtered)
                 output.write(resultingTaxonomy)
         else:
             taxonomy = ["no identification", "no identification", "no identification", "no identification",
