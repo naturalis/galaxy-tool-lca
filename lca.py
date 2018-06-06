@@ -83,6 +83,8 @@ def zip_taxonomy_column(otu, topTreshold):
 def find_lca(zippedTaxonomy):
     count = 0
     taxonomy = []
+    if zippedTaxonomy:
+        zippedTaxonomy[-1] = "no identification"
     for y in zippedTaxonomy:
         if len(set(y)) > 1:
             break
