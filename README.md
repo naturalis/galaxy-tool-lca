@@ -17,9 +17,15 @@ sudo chmod 777 galaxy-tool-lca/lca.py
 ```
 sudo ln -s /home/galaxy/Tools/galaxy-tool-lca/lca.py /usr/local/bin/lca.py
 ```
+Copy the wrappers to the right location or make symbolic links
 ```
 sudo cp galaxy-tool-lca/lca.sh /home/galaxy/galaxy/tools/identify/lca.sh
 sudo cp galaxy-tool-lca/lca.xml /home/galaxy/galaxy/tools/identify/lca.xml
+```
+For development symbolic links are recommended
+```
+sudo ln -s /home/galaxy/Tools/galaxy-tool-lca/lca.xml /home/galaxy/galaxy/tools/identify/lca.xml
+sudo ln -s /home/galaxy/Tools/galaxy-tool-lca/lca.sh /home/galaxy/galaxy/tools/identify/lca.sh
 ```
 Add the following line to /home/galaxy/galaxy/config/tool_conf.xml
 ```
