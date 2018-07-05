@@ -22,6 +22,8 @@ parser.add_argument('-fh', metavar='filter hits', dest='filterHitsParam', type=s
 			help='filter out hit that contain unwanted taxonomy', required=False, default="",nargs='?')
 parser.add_argument('-flh', metavar='filter lca hits', dest='filterLcaHits', type=str,
 			help='do not use a String in de lca determination', required=False, default="",nargs='?')
+parser.add_argument('-minbit', dest='minbit', type=str, required=False, nargs='?', default="0")
+
 args = parser.parse_args()
 
 def filter_check(filterParam, line):
@@ -74,7 +76,7 @@ def calculate_bitscore_treshold(otu):
 def zip_taxonomy_column(otu, topTreshold):
     taxons = []
     for tax in otu:
-        if float(tax[7]) >= topTreshold and float(tax[3]) >= float(args.id) and float(tax[5]) >= float(args.cov):
+        if float(tax[7]) >= topTreshold and float(tax[3]) >= float(args.id) and float(tax[5]) >= float(args.cov) and int(otu[0][7]) >= int(args.minbit):
             taxons.append(map(str.strip, tax[-1].split(" / ")))
     #use zip function for all* taxon lists
     zippedTaxonomy = zip(*taxons)

@@ -13,9 +13,8 @@ $setting_mode.best_hit
 	$setting_mode.tophitcoverage
 #end if
 $filterhits
-    $filterlcahits
-
-
+$filterlcahits
+$minbitscore
 </command>
 	<macros>
 	<macro name="best_hit_params">
@@ -26,6 +25,7 @@ $filterhits
 <inputs>
 <param format="tabular" name="input" type="data" label="BLAST output file"/>
 <param name="bitscore" type="float" label="Top bitscore percentage cutoff"  value="8" min="1" max="100"/>
+<param name="minbitscore" type="integer" label="Minimum bitscore"  value="100" min="1" max="1000"/>
 <param name="identity" type="float" label="Minimum identity"  value="80" min="1" max="100"/>
 <param name="coverage" type="float" label="Minimum coverage"  value="70" min="1" max="100"/>
 	<conditional name="setting_mode">
