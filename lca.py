@@ -76,7 +76,7 @@ def calculate_bitscore_treshold(otu):
 def zip_taxonomy_column(otu, topTreshold):
     taxons = []
     for tax in otu:
-        if float(tax[7]) >= topTreshold and float(tax[3]) >= float(args.id) and float(tax[5]) >= float(args.cov) and int(otu[0][7]) >= int(args.minbit):
+        if float(tax[7]) >= topTreshold and float(tax[3]) >= float(args.id) and float(tax[5]) >= float(args.cov) and float(otu[0][7]) >= float(args.minbit):
             taxons.append(map(str.strip, tax[-1].split(" / ")))
     #use zip function for all* taxon lists
     zippedTaxonomy = zip(*taxons)
