@@ -15,6 +15,7 @@ $setting_mode.best_hit
 $filterhits
 $filterlcahits
 $minbitscore
+$filtersource
 </command>
 	<macros>
 	<macro name="best_hit_params">
@@ -37,8 +38,13 @@ $minbitscore
 						<expand macro="best_hit_params"/>
 					</when>
 				</conditional>
-	<param name="filterhits" type="text" label="Filter hits"  value="environmental"/>
-    <param name="filterlcahits" type="text" label="Filter taxonomy"  value="unknown"/>
+	<param name="filterhits" type="text" label="Dont use hits containing this taxonomy:" help="Comma seperated"  value="environmental"/>
+    <param name="filterlcahits" type="text" label="Ignore rank when containing:" help="Comma seperated" value="unknown"/>
+	<param name="filtersource" type="select" multiple="true" label="Dont use hits with taxonomy from:">
+            <option value="BOLD" label="BOLD">BOLD</option>
+            <option value="private_BOLD">private_BOLD</option>
+            <option value="Genbank">Genbank</option>
+        </param>
 </inputs>
 
 	
