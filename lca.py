@@ -61,7 +61,6 @@ def remove_taxon(zippedTaxonomy):
     return filteredZipper
 
 def check_best_hit(otu):
-    print otu
     if float(otu[0][4]) >= float(args.topid) and float(otu[0][5]) >= float(args.topcoverage):
         taxonomy = map(str.strip, otu[0][-1].split(" / "))
         return otu[0][0] + "\tspecies\t" + taxonomy[-1] + "\t" + "\t".join(taxonomy) + "\tbest hit\n"
@@ -139,7 +138,8 @@ def determine_taxonomy(otu):
     if args.filterHitsParam.strip():
         otu_filtered = remove_hits(otu)
     with open(args.output, "a") as output:
-        if otu:
+        if otu_filtered:
+            print otu_filtered
             if args.tophit == "yes":
                 bestHit = check_best_hit(otu_filtered)
                 if bestHit:
