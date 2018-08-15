@@ -35,6 +35,7 @@ def filter_check(filterParam, line):
     filter = filterHitsParam.split(",")
     for x in filter:
         if x.lower() in line.lower():
+            #print x.lower() +"-"+line.lower()
             a = False
             break
         else:
@@ -47,6 +48,13 @@ def remove_hits(otu):
             if filter_check(args.filterHitsParam, line[-1]):
                 filteredOtu.append(line)
         return filteredOtu
+
+def remove_wrong_source_hits(otu):
+    filteredOtu = []
+    for line in otu:
+        if filter_check(args.filterSourceHits, line[8]):
+            filteredOtu.append(line)
+    return filteredOtu
 
 def remove_taxon(zippedTaxonomy):
     filteredZipper = []
@@ -131,15 +139,15 @@ def get_lca(otu):
         zippedTaxonomy = remove_taxon(zippedTaxonomy)
     #find the lca and make the line for the output file
     outputLine = generate_output_line(find_lca(zippedTaxonomy), otu)
-
     return outputLine
 
 def determine_taxonomy(otu):
     if args.filterHitsParam.strip():
         otu_filtered = remove_hits(otu)
+    if args.filterSourceHits.strip():
+        otu_filtered = remove_wrong_source_hits(otu)
     with open(args.output, "a") as output:
         if otu_filtered:
-            print otu_filtered
             if args.tophit == "yes":
                 bestHit = check_best_hit(otu_filtered)
                 if bestHit:
