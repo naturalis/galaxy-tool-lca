@@ -119,7 +119,7 @@ def generate_output_line(taxonomy, otu):
         taxonomy.append("no identification")
 
     if all(rank == "no identification" for rank in taxonomy):
-        return otu[0][0] + "\tno identification\tno identification\t" + "\t".join(taxonomy).strip() + "\tno identification\n"
+        return otu[0][0] + "\tno identification\tno identification\t" + "\t".join(taxonomy).strip() + "\tno lca\n"
     else:
         if taxonLevel == 6:
             taxonomy[-1] = ""
