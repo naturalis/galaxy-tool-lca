@@ -19,11 +19,11 @@ parser.add_argument('-tid', metavar='top_hit_identity', dest='topid', type=str,
 parser.add_argument('-tcov', metavar='top_hit_coverage', dest='topcoverage', type=str,
 			help='query coverage treshold for the tophit', required=False,  default='100')
 parser.add_argument('-fh', metavar='filter hits', dest='filterHitsParam', type=str,
-			help='filter out hit that contain unwanted taxonomy', required=False, default="",nargs='?')
+			help='filter out hit that contain unwanted taxonomy', required=False, default="none",nargs='?')
 parser.add_argument('-flh', metavar='filter lca hits', dest='filterLcaHits', type=str,
-			help='do not use a String in de lca determination', required=False, default="",nargs='?')
+			help='do not use a String in de lca determination', required=False, default="none",nargs='?')
 parser.add_argument('-fs', metavar='filter on taxonomy source', dest='filterSourceHits', type=str,
-			help='do not use hit when taxonomy from source', required=False, default="",nargs='?')
+			help='do not use hit when taxonomy from source', required=False, default="none",nargs='?')
 parser.add_argument('-minbit', dest='minbit', type=str, required=False, nargs='?', default="0")
 
 args = parser.parse_args()
@@ -35,7 +35,6 @@ def filter_check(filterParam, line):
     filter = filterHitsParam.split(",")
     for x in filter:
         if x.lower() in line.lower():
-            #print x.lower() +"-"+line.lower()
             a = False
             break
         else:
@@ -45,7 +44,7 @@ def filter_check(filterParam, line):
 def remove_hits(otu):
         filteredOtu = []
         for line in otu:
-            if filter_check(args.filterHitsParam, line[-1]):
+            if filter_check(args.filterHitsParam.strip(), line[-1]):
                 filteredOtu.append(line)
         return filteredOtu
 
@@ -142,10 +141,11 @@ def get_lca(otu):
     return outputLine
 
 def determine_taxonomy(otu):
-    if args.filterHitsParam.strip():
-        otu_filtered = remove_hits(otu)
+    otu_filtered = otu
+    if args.filterHitsParam.strip() and args.filterHitsParam.strip() != "none":
+        otu_filtered = remove_hits(otu_filtered)
     if args.filterSourceHits.strip():
-        otu_filtered = remove_wrong_source_hits(otu)
+        otu_filtered = remove_wrong_source_hits(otu_filtered)
     with open(args.output, "a") as output:
         if otu_filtered:
             if args.tophit == "yes":

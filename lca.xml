@@ -12,10 +12,22 @@ $setting_mode.best_hit
 	$setting_mode.tophitid
 	$setting_mode.tophitcoverage
 #end if
-$filterhits
-$filterlcahits
+#if $filterhits
+	$filterhits
+#else
+	"none"
+#end if
+#if $filterlcahits
+	$filterlcahits
+#else
+	"none"
+#end if
 $minbitscore
-$filtersource
+#if $filtersource
+    $filtersource
+#else:
+	"none"
+#end if
 </command>
 	<macros>
 	<macro name="best_hit_params">
