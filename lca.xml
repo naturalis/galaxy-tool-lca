@@ -7,8 +7,8 @@ $output
 $bitscore
 $identity
 $coverage
-$setting_mode.best_hit
-#if $setting_mode.best_hit == "yes"
+$setting_mode.setting
+#if $setting_mode.setting == "best_hit" or $setting_mode.setting == "best_hits_range"
 	$setting_mode.tophitid
 	$setting_mode.tophitcoverage
 #end if
@@ -42,11 +42,15 @@ $minbitscore
 <param name="identity" type="float" label="Minimum identity"  value="80" min="1" max="100"/>
 <param name="coverage" type="float" label="Minimum coverage"  value="70" min="1" max="100"/>
 	<conditional name="setting_mode">
-					<param name="best_hit" type="select" multiple="false" label="Settings mode">
-						<option value="yes" selected="true">Output the best hit as species if it is above the choosen treshold</option>
-						<option value="no">Check lca on all hits</option>
+					<param name="setting" type="select" multiple="false" label="Settings mode">
+						<option value="best_hit" selected="true">Output the best hit as species if it is above the choosen treshold</option>
+                        <option value="best_hits_range">Output all best hits above treshold</option>
+						<option value="only_lca">Check lca on all hits</option>
 					</param>
-					<when value="yes">
+					<when value="best_hit">
+						<expand macro="best_hit_params"/>
+					</when>
+                    <when value="best_hits_range">
 						<expand macro="best_hit_params"/>
 					</when>
 				</conditional>
