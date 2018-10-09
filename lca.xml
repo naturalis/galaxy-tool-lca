@@ -11,6 +11,9 @@ $setting_mode.setting
 #if $setting_mode.setting == "best_hit" or $setting_mode.setting == "best_hits_range"
 	$setting_mode.tophitid
 	$setting_mode.tophitcoverage
+#else
+	"none"
+	"none"
 #end if
 #if $filterhits
 	$filterhits
