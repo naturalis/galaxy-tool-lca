@@ -46,8 +46,8 @@ $minbitscore
 <param name="coverage" type="float" label="Minimum coverage"  value="70" min="1" max="100"/>
 	<conditional name="setting_mode">
 					<param name="setting" type="select" multiple="false" label="Settings mode">
-						<option value="best_hit" selected="true">Output the best hit as species if it is above the choosen treshold</option>
-                        <option value="best_hits_range">Output all best hits above treshold</option>
+						<option value="best_hit" selected="true">Output the top hit as species identification if it is above the choosen treshold</option>
+                        <option value="best_hits_range">Output all top hits above treshold</option>
 						<option value="only_lca">Check lca on all hits</option>
 					</param>
 					<when value="best_hit">
