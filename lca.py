@@ -80,14 +80,16 @@ def check_best_hit_range(otu_filtered):
     for x in otu_filtered:
         if float(x[4]) >= float(args.topid) and float(x[5]) >= float(args.topcoverage):
             taxonomy = map(str.strip, x[-1].split(" / "))
-            line = x[0] + "\tspecies\t" + taxonomy[-1] + "\t" + "\t".join(taxonomy) + "\tbest hit"
+            line = x[0] + "\tspecies\t" + taxonomy[-1] + "\t" + "\t".join(taxonomy) + "\ttop hit"
             if line not in hitList:
                 hitList[line] = [[float(x[4])],[float(x[5])]]
             else:
                 hitList[line][0].append(float(x[4]))
                 hitList[line][1].append(float(x[5]))
     for y in hitList:
-        line = y+"\t"+str(round(min(hitList[y][0]),1))+"-"+str(round(max(hitList[y][0]), 1))+"\t"+str(round(min(hitList[y][1]), 1))+"-"+str(round(max(hitList[y][1]), 1))+"\n"
+        numberOfHits =  str(len(hitList[y][0]))
+        best = y.replace("top hit", "top hit ("+numberOfHits+")")
+        line = best+"\t"+str(round(min(hitList[y][0]),1))+"-"+str(round(max(hitList[y][0]), 1))+"\t"+str(round(min(hitList[y][1]), 1))+"-"+str(round(max(hitList[y][1]), 1))+"\n"
         output += line
     if output:
         return output
@@ -212,6 +214,7 @@ def lca():
     The first line starts with "Query ID", this is the header so it will not be used. Every line is stored in the
     otuLines variable.
     """
+    print "test"
     write_header()
     lastLineCount = linecount()
     with open(args.input, "r") as input:
