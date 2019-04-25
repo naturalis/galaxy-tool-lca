@@ -1,5 +1,5 @@
 # galaxy-tool-lca
-A tool to determine the lowest common ancestor from BLAST results
+A tool to determine the lowest common ancestor from BLAST results.This repo can be used for the new (03-04-2019) galaxy 19.01 Naturalis server. The old galaxy 16.04 server is not supported anymore with this pipeline.
 ## Getting Started
 ### Prerequisites
 This tool uses specifically the BLAST output as input
@@ -11,23 +11,7 @@ cd /home/galaxy/Tools
 ```
 sudo git clone https://github.com/naturalis/galaxy-tool-lca
 ```
-```
-sudo chmod 777 galaxy-tool-lca/lca.py
-```
-```
-sudo ln -s /home/galaxy/Tools/galaxy-tool-lca/lca.py /usr/local/bin/lca.py
-```
-Copy the wrappers to the right location or make symbolic links
-```
-sudo cp galaxy-tool-lca/lca.sh /home/galaxy/galaxy/tools/identify/lca.sh
-sudo cp galaxy-tool-lca/lca.xml /home/galaxy/galaxy/tools/identify/lca.xml
-```
-For development symbolic links are recommended
-```
-sudo ln -s /home/galaxy/Tools/galaxy-tool-lca/lca.xml /home/galaxy/galaxy/tools/identify/lca.xml
-sudo ln -s /home/galaxy/Tools/galaxy-tool-lca/lca.sh /home/galaxy/galaxy/tools/identify/lca.sh
-```
 Add the following line to /home/galaxy/galaxy/config/tool_conf.xml
 ```
-<tool file="identify/lca.xml" />
+<tool file="/home/galaxy/Tools/galaxy-tool-lca/lca.xml" />
 ```
