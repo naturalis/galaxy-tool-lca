@@ -9,7 +9,7 @@ Installing the tool for use in Galaxy
 cd /home/galaxy/Tools
 ```
 ```
-sudo git clone https://github.com/naturalis/galaxy-tool-lca
+git clone https://github.com/naturalis/galaxy-tool-lca
 ```
 Add the following line to /home/galaxy/galaxy/config/tool_conf.xml
 ```
