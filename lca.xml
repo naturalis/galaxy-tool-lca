@@ -1,8 +1,12 @@
 <tool id="lca" name="lowest common ancestor">
-<description>Find lowest common ancestor</description>
-<command interpreter="bash">
-lca.sh
-$input<!--blastoutput file input-->
+<!-- <description>Find lowest common ancestor</description>-->
+<requirements>
+        <requirement type="package" version="2.7">python</requirement> 
+    </requirements>
+<command>
+<![CDATA[
+bash '$__tool_directory__/lca.sh'
+$input
 $output
 $bitscore
 $identity
@@ -31,6 +35,7 @@ $minbitscore
 #else:
 	"none"
 #end if
+]]>
 </command>
 	<macros>
 	<macro name="best_hit_params">
@@ -66,7 +71,7 @@ $minbitscore
         </param>
 </inputs>
 
-	
+
 <outputs>
 	<data format="tabular" name="output" label="$input.display_name lca" />
 </outputs>

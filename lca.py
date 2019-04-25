@@ -87,8 +87,8 @@ def check_best_hit_range(otu_filtered):
                 hitList[line][0].append(float(x[4]))
                 hitList[line][1].append(float(x[5]))
     for y in hitList:
-        numberOfHits =  str(len(hitList[y][0]))
-        best = y.replace("top hit", "top hit ("+numberOfHits+")")
+        numberOfHits = str(len(hitList[y][0]))
+        best = y.replace("top hit", "top hit (" + numberOfHits + ")")
         line = best+"\t"+str(round(min(hitList[y][0]),1))+"-"+str(round(max(hitList[y][0]), 1))+"\t"+str(round(min(hitList[y][1]), 1))+"-"+str(round(max(hitList[y][1]), 1))+"\n"
         output += line
     if output:
@@ -170,6 +170,7 @@ def determine_taxonomy(otu):
         otu_filtered = remove_wrong_source_hits(otu_filtered)
     endLine = "\n"
     with open(args.output, "a") as output:
+        bestHit = ""
         if otu_filtered:
             if args.tophit == "best_hit":
                 bestHit = check_best_hit(otu_filtered)
@@ -181,7 +182,7 @@ def determine_taxonomy(otu):
                 output.write(resultingTaxonomy+endLine)
             if bestHit:
                 output.write(bestHit)
-            else:
+            elif args.tophit == "best_hit" or args.tophit == "best_hits_range":
                 resultingTaxonomy = get_lca(otu_filtered)
                 output.write(resultingTaxonomy+endLine)
 
@@ -210,18 +211,17 @@ def write_header():
 
 def lca():
     """
-    This method loops trough the BLAST output and all the hits per otu will be the input for the get_lca method.
+    This method loops trough the BLAST output and all the hits per otu will be the input for the determine_taxonomy method.
     The first line starts with "Query ID", this is the header so it will not be used. Every line is stored in the
     otuLines variable.
     """
-    print "test"
     write_header()
     lastLineCount = linecount()
     with open(args.input, "r") as input:
         otuList = []
         otuLines = []
         for num, line in enumerate(input):
-            if line.split("\t")[0].strip() != "Query ID":
+            if line.split("\t")[0].strip() != "#Query ID":
                 if line.split("\t")[0] not in otuList and num != 1 or num == lastLineCount:
                     if num == lastLineCount:
                         otuList.append(line.split("\t")[0])
