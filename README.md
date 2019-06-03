@@ -29,6 +29,7 @@ There is an example input file included in the example folder, this file will be
 
 The script itself has multiple parameter options.<br />
 **Parameters:**
+
 | Parameter | Description |
 | --- | --- |
 | -i [input] | Input file |
