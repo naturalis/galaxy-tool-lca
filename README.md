@@ -10,7 +10,7 @@ git clone https://github.com/naturalis/galaxy-tool-lca
 ```
 
 ## Usage
-There is a example inputfile included in the example folder, this file will be used to execute the example commands.
+There is an example input file included in the example folder, this file will be used to execute the example commands. The file consist of 11 columns and has a specific header.
 
 ### Quick start
 
