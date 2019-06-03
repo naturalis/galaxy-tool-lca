@@ -3,10 +3,10 @@ A tool to determine the lowest common ancestor from BLAST results with taxonomy.
 <br />
 **Step 1, filter on treshold:** 
 
-| Query | Subject | Identity percentage | Coverage | bitscore
+| Query | Subject | Identity percentage | Coverage | bitscore |
 | --- | --- |
-| Otu1 | GBA29605-17 | 91 | 95 | 320
-| Otu1 | GBA29605-17 | 91 | 95 | 320
+| Otu1 | GBA29605-17 | 91 | 95 | 320 |
+| Otu1 | GBA29605-17 | 91 | 95 | 320 |
 
 ## Getting Started
 ### Prerequisites
