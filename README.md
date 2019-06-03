@@ -45,7 +45,12 @@ The script itself has multiple parameter options.<br />
 | -flh | Filter lca hits, during the determination of the lca ignore this string  |
 | -minbit | Minimum bitscore treshold |
 
-### Quick start
+### Examples
+**Example 1**
+This command performs an lca analysis on all the hits. 
+```
+python lca.py -i example/example.tabular -o output1_example.tabular -b 8 -id 80 -cov 80 -t only_lca
+```
 
 ## Source
 Huson, D. H., Auch, A. F., Qi, J., & Schuster, S. C. (2007). MEGAN analysis of metagenomic data. Genome Research, 17(3), 377–386. http://doi.org/10.1101/gr.5969107
