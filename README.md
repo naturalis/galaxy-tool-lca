@@ -33,7 +33,7 @@ From the top hits there will be filtered on identity, coverage and bitscore. Let
 <br />
 
 **Step 3, determine the lowest common ancestor:** <br />
-
+Of all the remaining hits the lowest common ancestor is dertermined. The script starts at species level, it checks if all the hits are comming from the same species. If not it checks the genus level and so on. 
 
 | Query | Subject | taxonomy |
 | --- | --- | --- |
@@ -43,6 +43,7 @@ From the top hits there will be filtered on identity, coverage and bitscore. Let
 | Otu1 | hit4 | Animalia / Arthropoda / Insecta / Diptera / Asilidae / Scytomedes / Scytomedes haemorrhoidalis |
 | Otu1 | hit5 | Animalia / Arthropoda / Insecta / Diptera / Asilidae / Proctacanthus / Proctacanthus hinei |
 
+With this example data and tresholds the classification of otu1 will be Asilidae. 
 <br />
 
 ## Getting Started
