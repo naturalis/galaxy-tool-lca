@@ -5,9 +5,13 @@ A tool to determine the lowest common ancestor from BLAST results with taxonomy.
 ### Prerequisites
 python 2.7
 ### Download
+```
 git clone https://github.com/naturalis/galaxy-tool-lca
+```
 
 ## Usage
+There is a example inputfile included in the example folder, this file will be used to execute the example commands.
+
 ### Quick start
 
 ## Source
