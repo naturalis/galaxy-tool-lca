@@ -11,6 +11,15 @@ git clone https://github.com/naturalis/galaxy-tool-lca
 
 ## Usage
 There is an example input file included in the example folder, this file will be used to execute the example commands. The file consist of 11 columns and has a specific header.
+**Column explanation:**
+
+| Column name | Description |
+| --- | --- |
+| Query ID | Id of the input sequence (qseqid) |
+| Subject | means Subject Title (stitle) |
+| Subject accession | Subject accession (sacc) |
+| Subject Taxonomy ID | unique Subject Taxonomy ID (staxid), this value can be any value and is not used the find the lca |
+
 
 ### Quick start
 
