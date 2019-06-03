@@ -33,6 +33,7 @@ From the top hits there will be filtered on identity, coverage and bitscore. Let
 <br />
 
 **Step 3, determine the lowest common ancestor:** <br />
+
 | Query | Subject | taxonomy |
 | --- | --- | --- |
 | Otu1 | hit1 | 93 |
