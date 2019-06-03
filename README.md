@@ -41,7 +41,6 @@ Of all the remaining hits the lowest common ancestor is dertermined. The script 
 | Otu1 | hit2 | Animalia / Arthropoda / Insecta / Diptera / Asilidae / Scarbroughia / Scarbroughia delicatula |
 | Otu1 | hit3 | Animalia / Arthropoda / Insecta / Diptera / Asilidae / Schildia / Schildia fragilis |
 | Otu1 | hit4 | Animalia / Arthropoda / Insecta / Diptera / Asilidae / Scytomedes / Scytomedes haemorrhoidalis |
-| Otu1 | hit5 | Animalia / Arthropoda / Insecta / Diptera / Asilidae / Proctacanthus / Proctacanthus hinei |
 
 With this example data and tresholds the classification of otu1 will be Asilidae. This is a basic explanation of the LCA approach, more advanced filter settings and output options are shown at the example commands.
 <br />
