@@ -1,22 +1,43 @@
 # galaxy-tool-lca
-A tool to determine the lowest common ancestor from BLAST results with taxonomy. This approach is partly based on MEGAN's (Huson et al., 2007) LCA method. This tool is more flexible and easier to use then MEGAN, it does not specificly use taxonids or sepperated mapping files. Instead, the script handles files with the taxonomy present in de last column of the input file. Those input files can be generated with our BLAST pipeline (not been published yet) or you can create them manually. Determining the lowest common ancestor can help to identify sequences that do not have a significant good blast hit. The analyses goes in folowing order:
+A tool to determine the lowest common ancestor from BLAST results with taxonomy. This approach is partly based on MEGAN's (Huson et al., 2007) LCA method. This tool is more flexible and easier to use then MEGAN, it does not specificly use taxonids or sepperated mapping files. Instead, the script handles files with the taxonomy present in de last column of the input file. Those input files can be generated with our BLAST pipeline (not been published yet) or you can create them manually. Determining the lowest common ancestor can help to identify sequences that do not have a significant good blast hit. The basis of the approach for the analyses goes in folowing order:
 <br /><br />
 **Step 1, determine the top percentage based on bitscore:** <br />
-Of all the blast hits a sub-selection made of the top hits based on a percentage of the bitscore. If the top percentage is set to 8% the top will be calculated like 0.92\*bitscore best hit=top treshold. In this example all hits with a bitscore above 294.4 will continue to the next step.   
+Of all the blast hits a sub-selection will be made of the top hits based on a percentage of the bitscore. If the top percentage is set to 8% the top will be calculated like 0.92\*bitscore best hit=top treshold. In this example all hits with a bitscore above 294.4 will continue to the next step.   
 
 | Query | Subject | Identity percentage | Coverage | bitscore |
 | --- | --- | --- | --- | --- |
-| Otu1 | hit1 | 91 | 95 | 320 |
-| Otu1 | hit2 | 91 | 95 | 320 |
-| Otu1 | hit3 | 89 | 94 | 310 |
-| Otu1 | hit4 | 87 | 95 | 301 |
-| Otu1 | hit5 | 87 | 94 | 300 |
-| Otu1 | hit6 | 80 | 95 | 290 |
-| Otu1 | hit7 | 80 | 95 | 290 |
+| Otu1 | hit1 | 93 | 95 | 320 |
+| Otu1 | hit2 | 93 | 95 | 320 |
+| Otu1 | hit3 | 91 | 94 | 310 |
+| Otu1 | hit4 | 90 | 95 | 301 |
+| Otu1 | hit5 | 89 | 94 | 300 |
+| Otu1 | hit6 | 85 | 95 | 290 |
+| Otu1 | hit7 | 84 | 95 | 290 |
 | Otu1 | hit8 | 81 | 90 | 281 |
 | Otu1 | hit9 | 80 | 89 | 275 |
 | Otu1 | hit10 | 79 | 88 | 274 |
 
+<br />
+**Step 2, filter on treshold:** <br />
+From the top hits there will be filtered on identity, coverage and bitscore. Lets choose a treshold of 90 identity, 90 coverage and 250 bitscore. All hits with scores above the treshold will go to the next step. 
+
+| Query | Subject | Identity percentage | Coverage | bitscore |
+| --- | --- | --- | --- | --- |
+| Otu1 | hit1 | 93 | 95 | 320 |
+| Otu1 | hit2 | 93 | 95 | 320 |
+| Otu1 | hit3 | 91 | 94 | 310 |
+| Otu1 | hit4 | 90 | 95 | 301 |
+| Otu1 | hit5 | 89 | 94 | 300 |
+
+<br />
+**Step 3, determine the lowest common ancestor:** <br />
+| Query | Subject | taxonomy |
+| --- | --- | --- |
+| Otu1 | hit1 | 93 |
+| Otu1 | hit2 | 93 |
+| Otu1 | hit3 | 91 |
+| Otu1 | hit4 | 90 |
+| Otu1 | hit5 | 89 |
 ## Getting Started
 ### Prerequisites
 python 2.7
