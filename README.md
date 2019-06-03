@@ -11,6 +11,7 @@ git clone https://github.com/naturalis/galaxy-tool-lca
 
 ## Usage
 There is an example input file included in the example folder, this file will be used to execute the example commands. The file consist of 11 columns and has a specific header.<br />
+<br />
 **Column explanation:**
 
 | Column name | Description |
@@ -19,7 +20,12 @@ There is an example input file included in the example folder, this file will be
 | Subject | means Subject Title (stitle) |
 | Subject accession | Subject accession (sacc) |
 | Subject Taxonomy ID | unique Subject Taxonomy ID (staxid), this value can be any value and is not used the find the lca |
-
+| Identity percentage | Identity percentage of hit () |
+| Coverage | means Query Coverage Per Subject (qcovs) |
+| Evalue | expect value of the hit (evalue) |
+| Bitscore | Bit score of hit (bitscore) |
+| Source | The source of were the taxonomy comes from, this value can be any value and is not used the find the lca |
+| Taxonomy | This column contains the taxonomy of the hit in the order Kingdom / phylum / class / order / family / genus /species |
 
 ### Quick start
 
