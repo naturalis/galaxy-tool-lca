@@ -34,14 +34,17 @@ From the top hits there will be filtered on identity, coverage and bitscore. Let
 
 **Step 3, determine the lowest common ancestor:** <br />
 
+
 | Query | Subject | taxonomy |
 | --- | --- | --- |
-| Otu1 | hit1 | 93 |
-| Otu1 | hit2 | 93 |
-| Otu1 | hit3 | 91 |
-| Otu1 | hit4 | 90 |
-| Otu1 | hit5 | 89 |
+| Otu1 | hit1 | Animalia / Arthropoda / Insecta / Diptera / Asilidae / Scarbroughia / Scarbroughia delicatula |
+| Otu1 | hit2 | Animalia / Arthropoda / Insecta / Diptera / Asilidae / Scarbroughia / Scarbroughia delicatula |
+| Otu1 | hit3 | Animalia / Arthropoda / Insecta / Diptera / Asilidae / Schildia / Schildia fragilis |
+| Otu1 | hit4 | Animalia / Arthropoda / Insecta / Diptera / Asilidae / Scytomedes / Scytomedes haemorrhoidalis |
+| Otu1 | hit5 | Animalia / Arthropoda / Insecta / Diptera / Asilidae / Proctacanthus / Proctacanthus hinei |
+
 <br />
+
 ## Getting Started
 ### Prerequisites
 python 2.7
