@@ -27,6 +27,22 @@ There is an example input file included in the example folder, this file will be
 | Source | The source of were the taxonomy comes from, this value can be any value and is not used the find the lca |
 | Taxonomy | This column contains the taxonomy of the hit in the order Kingdom / phylum / class / order / family / genus /species |
 
+The script itself has multiple parameter options.<br />
+**Parameters:**
+| Parameter | Description |
+| --- | --- |
+| -i [input] | Input file |
+| -o [output] | Output file |
+| -b | bitscore top percentage treshold |
+| -id | Minimum identity treshold |
+| -cov | Minimum coverage treshold |
+| -t | Check the top hit first or perform an lca analysis on all hits. Options:['only_lca', 'best_hit', "best_hits_range"] |
+| -tid | Identity treshold for the tophit, only used when -t best_hit or best_hits_range |
+| -tcov | Coverage treshold for the tophit, only used when -t best_hit or best_hits_range |
+| -fh | Filter hits, filter out lines that contain a certain string |
+| -flh | Filter lca hits, during the determination of the lca ignore this string  |
+| -minbit | Minimum bitscore treshold |
+
 ### Quick start
 
 ## Source
