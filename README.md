@@ -1,8 +1,12 @@
 # galaxy-tool-lca
 A tool to determine the lowest common ancestor from BLAST results with taxonomy. This approach is partly based on MEGAN's (Huson et al., 2007) LCA method. This tool is more flexible and easier to use then MEGAN, it does not specificly use taxonids or sepperated mapping files. Instead, the script handles files with the taxonomy present in de last column of the input file. Those input files can be generated with our BLAST pipeline (not been published yet) or you can create them manually. Determining the lowest common ancestor can help to identify sequences that do not have a significant good blast hit. The analyses goes in folowing order:
+<br />
+**Step 1, filter on treshold:** 
 
-**Step 1, filter on treshold:** <br />
-
+| Query | Subject | Identity percentage | Coverage | bitscore
+| --- | --- |
+| Otu1 | GBA29605-17 | 91 | 95 | 320
+| Otu1 | GBA29605-17 | 91 | 95 | 320
 
 ## Getting Started
 ### Prerequisites
