@@ -20,7 +20,7 @@ Of all the blast hits a sub-selection will be made of the top hits based on a pe
 <br />
 
 **Step 2, filter on treshold:** <br />
-From the top hits there will be filtered on identity, coverage and bitscore. Lets choose a treshold of 90 identity, 90 coverage and 250 bitscore. All hits with scores above the treshold will go to the next step. 
+From the top hits there will be filtered on identity, coverage and bitscore. Lets choose a treshold of 90 identity, 90 coverage and 250 bitscore. All hits with scores above the tresholds will go to the next step. 
 
 | Query | Subject | Identity percentage | Coverage | bitscore |
 | --- | --- | --- | --- | --- |
@@ -43,7 +43,7 @@ Of all the remaining hits the lowest common ancestor is dertermined. The script 
 | Otu1 | hit4 | Animalia / Arthropoda / Insecta / Diptera / Asilidae / Scytomedes / Scytomedes haemorrhoidalis |
 | Otu1 | hit5 | Animalia / Arthropoda / Insecta / Diptera / Asilidae / Proctacanthus / Proctacanthus hinei |
 
-With this example data and tresholds the classification of otu1 will be Asilidae. 
+With this example data and tresholds the classification of otu1 will be Asilidae. This is a basic explanation of the LCA approach, more advanced filter settings and output options are shown at the example commands.
 <br />
 
 ## Getting Started
@@ -57,7 +57,7 @@ git clone https://github.com/naturalis/galaxy-tool-lca
 ## Usage
 There is an example input file included in the example folder, this file will be used to execute the example commands. The file consist of 11 columns, has a specific header and is tab seperated.<br />
 <br />
-**Column explanation:**
+**Column explanation input file:**
 
 | Column name | Description |
 | --- | --- |
