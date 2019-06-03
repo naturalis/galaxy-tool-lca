@@ -28,6 +28,7 @@ There is an example input file included in the example folder, this file will be
 | Taxonomy | This column contains the taxonomy of the hit in the order Kingdom / phylum / class / order / family / genus /species |
 
 The script itself has multiple parameter options.<br />
+<br />
 **Parameters:**
 
 | Parameter | Description |
