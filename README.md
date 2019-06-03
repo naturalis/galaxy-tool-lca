@@ -18,6 +18,7 @@ Of all the blast hits a sub-selection will be made of the top hits based on a pe
 | Otu1 | hit10 | 79 | 88 | 274 |
 
 <br />
+
 **Step 2, filter on treshold:** <br />
 From the top hits there will be filtered on identity, coverage and bitscore. Lets choose a treshold of 90 identity, 90 coverage and 250 bitscore. All hits with scores above the treshold will go to the next step. 
 
@@ -30,6 +31,7 @@ From the top hits there will be filtered on identity, coverage and bitscore. Let
 | Otu1 | hit5 | 89 | 94 | 300 |
 
 <br />
+
 **Step 3, determine the lowest common ancestor:** <br />
 | Query | Subject | taxonomy |
 | --- | --- | --- |
@@ -38,6 +40,7 @@ From the top hits there will be filtered on identity, coverage and bitscore. Let
 | Otu1 | hit3 | 91 |
 | Otu1 | hit4 | 90 |
 | Otu1 | hit5 | 89 |
+<br />
 ## Getting Started
 ### Prerequisites
 python 2.7
