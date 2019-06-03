@@ -91,8 +91,8 @@ The script itself has multiple parameter options.<br />
 | -minbit | Minimum bitscore treshold |
 
 ### Examples
-**Example 1**
-This command performs an lca analysis on all the hits. 
+**Example 1:**<br />
+This command performs an lca analysis on all the hits per otu. The top percentage treshold is 8%, minimal idenity is 80% and minimal coverage is set to 80.
 ```
 python lca.py -i example/example.tabular -o output1_example.tabular -b 8 -id 80 -cov 80 -t only_lca
 ```
