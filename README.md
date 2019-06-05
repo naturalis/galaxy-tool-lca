@@ -61,14 +61,14 @@ There is an example input file included in the example folder, this file will be
 | Column name | Description |
 | --- | --- |
 | Query ID | Id of the input sequence (qseqid) |
-| Subject | means Subject Title (stitle) |
+| Subject | Means Subject Title (stitle) |
 | Subject accession | Subject accession (sacc) |
-| Subject Taxonomy ID | unique Subject Taxonomy ID (staxid), this value can be any value and is not used the find the lca |
+| Subject Taxonomy ID | Unique Subject Taxonomy ID (staxid), this value can be any value and is not used to find the lca |
 | Identity percentage | Identity percentage of hit () |
-| Coverage | means Query Coverage Per Subject (qcovs) |
-| Evalue | expected value of the hit (evalue) |
+| Coverage | Means Query Coverage Per Subject (qcovs) |
+| Evalue | Expected value of the hit (evalue) |
 | Bitscore | Bit score of hit (bitscore) |
-| Source | The source of where the taxonomy comes from, this value can be any value and is not used the find the lca |
+| Source | The source of where the taxonomy comes from, this value can be any value and is not used to find the lca |
 | Taxonomy | This column contains the taxonomy of the hit in the order Kingdom / phylum / class / order / family / genus /species |
 
 The script itself has multiple parameter options.<br />
@@ -79,7 +79,7 @@ The script itself has multiple parameter options.<br />
 | --- | --- |
 | -i | Input file |
 | -o | Output file |
-| -b | bitscore top percentage threshold |
+| -b | Bitscore top percentage threshold |
 | -id | Minimum identity threshold |
 | -cov | Minimum coverage threshold |
 | -t | Check the top hit first or perform an lca analysis on all hits. Options:['only_lca', 'best_hit', "best_hits_range"] |
