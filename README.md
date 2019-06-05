@@ -115,20 +115,24 @@ Otu16 is classified as "unknown genus". This is because that is how the informat
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Otu16 | genus | unknown genus | Animalia | Annelida | Polychaeta | Polychaeta incertae sedis | unknown family | unknown genus | no identification | lca |
 
-**Example 2:**<br />
+**Example 2 taxonomy filter:**<br />
 This command performs an lca analysis on all the hits per otu like example 1, but now during the lca analysis if the string "unknown" exist in a rank it will be ignored. In many databases like Genbank or BOLD not all taxonomy is filled in by the uploader. 
 ```
 python lca.py -i example/example.tabular -o output2_example.tabular -b 8 -id 80 -cov 80 -t only_lca -flh unknown 
 ```
-Otu6 is now now classified as Thelepus at genus level. If you look at the example.tabular file you can see that this makes sense, in example one the  
+**Example 2 taxonomy filter output explanation:**<br />
+Otu6 is now now classified as Thelepus at genus level. If you look at the example.tabular file you can see that this makes sense, in example 1 the rank was pushed up to class level because of the "unknowns" in the first hit. 
 
 | #query | #lca rank | #lca taxon | #kingdom | #phylum | #class | #order | #family | #genus | #species | #method |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Otu6 | genus | Thelepus | Eukaryota | Annelida | Polychaeta | Terebellida | Terebellidae | Thelepus | no identification | lca |
 | Otu16 | order | Polychaeta incertae sedis | Animalia | Annelida | Polychaeta | Polychaeta incertae sedis | no identification | no identification | no identification | lca |
 
-
-
+**Example 3 best hit species level identification:**<br />
+This command performs an lca analysis if the top hit falls below the "top hit tresholds". If the top blast hit (sorted on evalue) exceeds the tresholds the top hit is chosen and the input sequence gets an species level identification. Notice the change in paramters ```-t best_hit -tid 98 -tcov 100```. If the top hit has an identity above 98% en a coverage above or equal to 100% this hit will be the taxonomy classification and will be at species level.    
+```
+python lca.py -i example/example.tabular -o output3_example.tabular -b 8 -id 80 -cov 80 -t best_hit -tid 98 -tcov 100 -flh unknown 
+```
 
 
 ## Source
