@@ -102,10 +102,33 @@ Otu 1 has no identification and there is no lca analysis performed. You can see 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Otu1 | no identification | no identification | no identification | no identification | no identification | no identification | no identification | no identification | no identification | no lca |
 
+For Otu3 and Otu 6 an lca analysis is performed. The identification of otu 3 is on genus level and is classified as Chaetopterus. 
+
 | #query | #lca rank | #lca taxon | #kingdom | #phylum | #class | #order | #family | #genus | #species | #method |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Otu3 | genus | Chaetopterus | Eukaryota | Annelida | Polychaeta | Spionida | Chaetopteridae | Chaetopterus | no identification | lca |
 | Otu6 | class | Polychaeta | Eukaryota | Annelida | Polychaeta | no identification | no identification | no identification | no identification | lca |
+
+Otu16 is classified as "unknown genus". This is because that is how the information is stored in the database. In this case the hit is comming from BOLD http://www.boldsystems.org/index.php/Public_RecordView?processid=POLNB1246-14
+
+| #query | #lca rank | #lca taxon | #kingdom | #phylum | #class | #order | #family | #genus | #species | #method |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Otu16 | genus | unknown genus | Animalia | Annelida | Polychaeta | Polychaeta incertae sedis | unknown family | unknown genus | no identification | lca |
+
+**Example 2:**<br />
+This command performs an lca analysis on all the hits per otu like example 1, but now during the lca analysis if the string "unknown" exist in a rank it will be ignored. In many databases like Genbank or BOLD not all taxonomy is filled in by the uploader. 
+```
+python lca.py -i example/example.tabular -o output2_example.tabular -b 8 -id 80 -cov 80 -t only_lca -flh unknown 
+```
+Otu6 is now now classified as Thelepus at genus level. If you look at the example.tabular file you can see that this makes sense, in example one the  
+
+| #query | #lca rank | #lca taxon | #kingdom | #phylum | #class | #order | #family | #genus | #species | #method |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Otu6 | genus | Thelepus | Eukaryota | Annelida | Polychaeta | Terebellida | Terebellidae | Thelepus | no identification | lca |
+| Otu16 | order | Polychaeta incertae sedis | Animalia | Annelida | Polychaeta | Polychaeta incertae sedis | no identification | no identification | no identification | lca |
+
+
+
 
 
 ## Source
