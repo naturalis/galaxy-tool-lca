@@ -33,7 +33,7 @@ From the top hits there will be filtered on identity, coverage and bitscore. Let
 <br />
 
 **Step 3, determine the lowest common ancestor:** <br />
-Of all the remaining hits the lowest common ancestor is determined. The script starts at species level, it checks if all the hits are coming from the same species. If not it checks the genus level and so on. 
+Of all the remaining hits the lowest common ancestor is determined. The script starts at species level, it checks if all the hits are coming from the same species. If not it checks at genus level and so on. 
 
 | Query | Subject | taxonomy |
 | --- | --- | --- |
@@ -42,7 +42,7 @@ Of all the remaining hits the lowest common ancestor is determined. The script s
 | Otu1 | hit3 | Animalia / Arthropoda / Insecta / Diptera / Asilidae / Schildia / Schildia fragilis |
 | Otu1 | hit4 | Animalia / Arthropoda / Insecta / Diptera / Asilidae / Scytomedes / Scytomedes haemorrhoidalis |
 
-With this example data and thresholds the classification of otu1 will be Asilidae. This is a basic explanation of the LCA approach, more advanced filter settings and output options are shown at the example commands.
+With this example data and thresholds the identification of otu1 will be Asilidae. This is a basic explanation of the LCA approach, more advanced filter settings and output options are shown at the example commands.
 <br />
 
 ## Getting Started
@@ -54,7 +54,7 @@ git clone https://github.com/naturalis/galaxy-tool-lca
 ```
 
 ## Usage
-There is an example input file included in the example folder, this file will be used to execute the example commands. The file consist of 11 columns, has a specific header and is tab separated.<br />
+There is an example input file included in the example folder, this file will be used to execute the commands. The file consist of 11 columns, has a specific header and is tab separated.<br />
 <br />
 **Column explanation input file:**
 
@@ -91,37 +91,37 @@ The script itself has multiple parameter options.<br />
 
 ### Examples
 **Example 1:**<br />
-This command performs an lca analysis on all the hits per otu. The top percentage threshold is 8%, minimal idenity is 80% and minimal coverage is set to 80. If you perform an lca analysis on all the hits the classification will never be on species level. 
+This command performs an lca analysis on all the hits per input sequence. The top percentage threshold is 8%, minimal idenity and coverage is set to 80%. If you perform an lca analysis on all the hits the identification will never be on species level. 
 ```
 python lca.py -i example/example.tabular -o output1_example.tabular -b 8 -id 80 -cov 80 -t only_lca
 ```
 **Example 1 output explanation:**<br />
-Otu 1 has no identification and there is no lca analysis performed. You can see this in the last column. The hits of this otu did not passed the thresholds.
+Otu1 has no identification and there is no lca analysis performed. You can see this in the last column. The hits of this sequence did not passed the thresholds.
 
 | #query | #lca rank | #lca taxon | #kingdom | #phylum | #class | #order | #family | #genus | #species | #method |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Otu1 | no identification | no identification | no identification | no identification | no identification | no identification | no identification | no identification | no identification | no lca |
 
-For Otu3 and Otu 6 an lca analysis is performed. The identification of otu 3 is on genus level and is classified as Chaetopterus. 
+For Otu3 and Otu 6 an lca analysis is performed. The identification of otu 3 is at genus level and is identified as Chaetopterus. 
 
 | #query | #lca rank | #lca taxon | #kingdom | #phylum | #class | #order | #family | #genus | #species | #method |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Otu3 | genus | Chaetopterus | Eukaryota | Annelida | Polychaeta | Spionida | Chaetopteridae | Chaetopterus | no identification | lca |
 | Otu6 | class | Polychaeta | Eukaryota | Annelida | Polychaeta | no identification | no identification | no identification | no identification | lca |
 
-Otu16 is classified as "unknown genus". This is because that is how the information is stored in the database. In this case the hit is coming from BOLD http://www.boldsystems.org/index.php/Public_RecordView?processid=POLNB1246-14
+Otu16 is identified as "unknown genus". This is because that is how the information is stored in the reference database. In this case the hit is coming from BOLD http://www.boldsystems.org/index.php/Public_RecordView?processid=POLNB1246-14
 
 | #query | #lca rank | #lca taxon | #kingdom | #phylum | #class | #order | #family | #genus | #species | #method |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Otu16 | genus | unknown genus | Animalia | Annelida | Polychaeta | Polychaeta incertae sedis | unknown family | unknown genus | no identification | lca |
 
 **Example 2 taxonomy filter:**<br />
-This command performs an lca analysis on all the hits per otu like example 1, but now during the lca analysis if the string "unknown" exist in a rank it will be ignored. In many databases like Genbank or BOLD not all taxonomy is filled in by the uploader. 
+This command performs an lca analysis on all the hits per sequence like example 1, but now during the lca analysis if the text "unknown" exist in a rank it will be ignored. In many databases like Genbank or BOLD not all taxonomy is filled in by the uploader. 
 ```
 python lca.py -i example/example.tabular -o output2_example.tabular -b 8 -id 80 -cov 80 -t only_lca -flh unknown 
 ```
 **Example 2 taxonomy filter output explanation:**<br />
-Otu6 is now now classified as Thelepus at genus level. If you look at the example.tabular file you can see that this makes sense, in example 1 the rank was pushed up to class level because of the "unknowns" in the first hit. 
+Otu6 is now now identified as Thelepus at genus level. If you look at the example.tabular file you can see that this makes sense, in example 1 the rank was pushed up to class level because of the "unknowns" in the first hit. 
 
 | #query | #lca rank | #lca taxon | #kingdom | #phylum | #class | #order | #family | #genus | #species | #method |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -129,12 +129,12 @@ Otu6 is now now classified as Thelepus at genus level. If you look at the exampl
 | Otu16 | order | Polychaeta incertae sedis | Animalia | Annelida | Polychaeta | Polychaeta incertae sedis | no identification | no identification | no identification | lca |
 
 **Example 3 best hit species level identification:**<br />
-This command performs an lca analysis if the top hit falls below the "top hit" thresholds. If the top blast hit (sorted on evalue) exceeds the thresholds the top hit is chosen and the input sequence gets a species level identification. Notice the change in parameters ```-t best_hit -tid 98 -tcov 100```. If the top hit has an identity above 98% en a coverage above or equal to 100% this hit will be the taxonomy classification and will be at species level.    
+This command performs an lca analysis if the top hit falls below the "top hit" thresholds. If the top blast hit (sorted on evalue) exceeds the thresholds the top hit is chosen and the input sequence gets a species level identification. Notice the change in parameters ```-t best_hit -tid 98 -tcov 100```. If the top hit has an identity above 98% and a coverage above or equal to 100% this hit will be the taxonomic identification and will be at species level.    
 ```
 python lca.py -i example/example.tabular -o output3_example.tabular -b 8 -id 80 -cov 80 -t best_hit -tid 98 -tcov 100 -flh unknown 
 ```
 **Example 3 best hit species level identification output explanation:**<br />
-Now we have a otu that is identified to species level. Also the last column of Otu9 is different than the previous examples. The value "best hit" means that there is no lca analysis performed, but the species of the top hit is chosen for identification. If you look at the example.tabular file you can see that the top hit of otu9 has an identity above 98 and coverage above or equal to 100. 
+Now we have an otu that is identified on species level. Also the last column of Otu9 is different than in the previous examples. The value "best hit" means that there is no lca analysis performed, but the species of the top hit is chosen for identification. If you look at the example.tabular file you can see that the top hit of otu9 has an identity above 98 and coverage equal to 100. 
 
 | #query | #lca rank | #lca taxon | #kingdom | #phylum | #class | #order | #family | #genus | #species | #method |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -142,7 +142,7 @@ Now we have a otu that is identified to species level. Also the last column of O
 | Otu9 | species | Myxine glutinosa | Eukaryota | Chordata | unknown class | Myxiniformes | Myxinidae | Myxine | Myxine glutinosa | best hit |
 
 **Example 4 best hit range:**<br />
-In some cases the sequences in the reference database are wrongly morphological identified or contaminated by human or bacterial DNA. It can also happen that a certain marker (16S, CO1, ITS) is not distinctive enough. Many people choose the top hit as the identification for the input sequence without looking at the second hit while then can even be a better choice. In these cases the following command can help to solve this. Notice the changed parameter ```-t best_hits_range```
+In some cases the sequences in the reference database are wrongly morphological identified or contaminated by human or bacterial DNA. It can also happen that a certain marker (16S, CO1, ITS) is not distinctive enough. Many people choose the top hit as the identification for the input sequence without looking at the second hit while that it can even be a better choice. In these cases the following command can help to solve this. Notice the changed parameter ```-t best_hits_range```
 ```
 python lca.py -i example/example.tabular -o output4_example.tabular -b 8 -id 80 -cov 80 -t best_hits_range -tid 98 -tcov 100 -flh unknown
 ```
