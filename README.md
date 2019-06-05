@@ -134,11 +134,18 @@ This command performs an lca analysis if the top hit falls below the "top hit tr
 python lca.py -i example/example.tabular -o output3_example.tabular -b 8 -id 80 -cov 80 -t best_hit -tid 98 -tcov 100 -flh unknown 
 ```
 **Example 3 best hit species level identification explanation:**<br />
+Now we have a otu that is identified on species level. Also the last column of Otu9 is different then the previous examples. The value "best hit" means that there is no lca analysis performed but the species of the top hit is chosen for identification. If you look at the example.tabulat file you can see that the top hit of otu9 has an idendity above 98 and coverage above or equal to 100. 
 
 | #query | #lca rank | #lca taxon | #kingdom | #phylum | #class | #order | #family | #genus | #species | #method |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Otu6 | genus | Thelepus | Eukaryota | Annelida | Polychaeta | Terebellida | Terebellidae | Thelepus | no identification | lca |
 | Otu9 | species | Myxine glutinosa | Eukaryota | Chordata | unknown class | Myxiniformes | Myxinidae | Myxine | Myxine glutinosa | best hit |
+
+## author
+
+
+## How to cite
+
 
 ## Source
 Huson, D. H., Auch, A. F., Qi, J., & Schuster, S. C. (2007). MEGAN analysis of metagenomic data. Genome Research, 17(3), 377–386. http://doi.org/10.1101/gr.5969107
