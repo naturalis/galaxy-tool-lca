@@ -133,7 +133,12 @@ This command performs an lca analysis if the top hit falls below the "top hit tr
 ```
 python lca.py -i example/example.tabular -o output3_example.tabular -b 8 -id 80 -cov 80 -t best_hit -tid 98 -tcov 100 -flh unknown 
 ```
+**Example 3 best hit species level identification explanation:**<br />
 
+| #query | #lca rank | #lca taxon | #kingdom | #phylum | #class | #order | #family | #genus | #species | #method |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Otu6 | genus | Thelepus | Eukaryota | Annelida | Polychaeta | Terebellida | Terebellidae | Thelepus | no identification | lca |
+| Otu9 | species | Myxine glutinosa | Eukaryota | Chordata | unknown class | Myxiniformes | Myxinidae | Myxine | Myxine glutinosa | best hit |
 
 ## Source
 Huson, D. H., Auch, A. F., Qi, J., & Schuster, S. C. (2007). MEGAN analysis of metagenomic data. Genome Research, 17(3), 377–386. http://doi.org/10.1101/gr.5969107
