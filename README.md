@@ -96,10 +96,16 @@ This command performs an lca analysis on all the hits per otu. The top percentag
 python lca.py -i example/example.tabular -o output1_example.tabular -b 8 -id 80 -cov 80 -t only_lca
 ```
 **Example 1 output explanation:**<br />
+Otu 1 has no identification and there is no lca analysis performed. You can see this in the last column. The hits of this otu did passed the tresholds.
 
 | #query | #lca rank | #lca taxon | #kingdom | #phylum | #class | #order | #family | #genus | #species | #method |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Otu1 | no identification | no identification | no identification | no identification | no identification | no identification | no identification | no identification | no identification | no lca |
+
+| #query | #lca rank | #lca taxon | #kingdom | #phylum | #class | #order | #family | #genus | #species | #method |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Otu3 | genus | Chaetopterus | Eukaryota | Annelida | Polychaeta | Spionida | Chaetopteridae | Chaetopterus | no identification | lca |
+| Otu6 | class | Polychaeta | Eukaryota | Annelida | Polychaeta | no identification | no identification | no identification | no identification | lca |
 
 
 ## Source
