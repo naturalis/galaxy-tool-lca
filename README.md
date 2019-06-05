@@ -91,10 +91,16 @@ The script itself has multiple parameter options.<br />
 
 ### Examples
 **Example 1:**<br />
-This command performs an lca analysis on all the hits per otu. The top percentage treshold is 8%, minimal idenity is 80% and minimal coverage is set to 80.
+This command performs an lca analysis on all the hits per otu. The top percentage treshold is 8%, minimal idenity is 80% and minimal coverage is set to 80. If you perform an lca analysis on all the hits the classification will never be on species level. 
 ```
 python lca.py -i example/example.tabular -o output1_example.tabular -b 8 -id 80 -cov 80 -t only_lca
 ```
+**Example 1 output explanation:**<br />
+| #query | #lca rank | #lca taxon | #kingdom | #phylum | #class | #order | #family | #genus | #species | #method |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|Otu1 | no identification | no identification | no identification | no identification | no identification | no identification | no identification | no identification | no identification | no lca |
+
+
 
 ## Source
 Huson, D. H., Auch, A. F., Qi, J., & Schuster, S. C. (2007). MEGAN analysis of metagenomic data. Genome Research, 17(3), 377–386. http://doi.org/10.1101/gr.5969107
