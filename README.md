@@ -77,8 +77,8 @@ The script itself has multiple parameter options.<br />
 
 | Parameter | Description |
 | --- | --- |
-| -i [input] | Input file |
-| -o [output] | Output file |
+| -i | Input file |
+| -o | Output file |
 | -b | bitscore top percentage treshold |
 | -id | Minimum identity treshold |
 | -cov | Minimum coverage treshold |
