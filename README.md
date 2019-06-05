@@ -96,10 +96,10 @@ This command performs an lca analysis on all the hits per otu. The top percentag
 python lca.py -i example/example.tabular -o output1_example.tabular -b 8 -id 80 -cov 80 -t only_lca
 ```
 **Example 1 output explanation:**<br />
+
 | #query | #lca rank | #lca taxon | #kingdom | #phylum | #class | #order | #family | #genus | #species | #method |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-|Otu1 | no identification | no identification | no identification | no identification | no identification | no identification | no identification | no identification | no identification | no lca |
-
+| Otu1 | no identification | no identification | no identification | no identification | no identification | no identification | no identification | no identification | no identification | no lca |
 
 
 ## Source
