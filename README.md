@@ -142,14 +142,18 @@ Now we have a otu that is identified on species level. Also the last column of O
 | Otu9 | species | Myxine glutinosa | Eukaryota | Chordata | unknown class | Myxiniformes | Myxinidae | Myxine | Myxine glutinosa | best hit |
 
 **Example 4 best hit range:**<br />
-In some cases the sequences in the reference database are wrongly morphological identified or contaminated by human or bactarial DNA. It can also happen that a centain marker (16S, CO1, ITS) is not distinctive enough. In these cases the following command can help to find this. Notice the changed paramèter ```-t best_hits_range```
+In some cases the sequences in the reference database are wrongly morphological identified or contaminated by human or bactarial DNA. It can also happen that a centain marker (16S, CO1, ITS) is not distinctive enough. In these cases the following command can help to find this. Notice the changed parameter ```-t best_hits_range```
 ```
 python lca.py -i example/example.tabular -o output4_example.tabular -b 8 -id 80 -cov 80 -t best_hits_range -tid 98 -tcov 100 -flh unknown
 ```
 **Example 4 best hit range output explanation:**<br />
+
 | #query | #lca rank | #lca taxon | #kingdom | #phylum | #class | #order | #family | #genus | #species | #method | #identity | #coverage |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Otu6 | genus | Thelepus | Eukaryota | Annelida | Polychaeta | Terebellida | Terebellidae | Thelepus | no identification | lca |  |  |
+| Otu9 | species | Myxine glutinosa | Eukaryota | Chordata | unknown class | Myxiniformes | Myxinidae | Myxine | Myxine glutinosa | top hit (6) | 98.7-100.0 | 100.0-100.0 |
+| Otu9 | species | Myxine limosa | Eukaryota | Chordata | unknown class | Myxiniformes | Myxinidae | Myxine | Myxine limosa | top hit (4) | 98.1-98.7 | 100.0-100.0 |
+
 
 
 
