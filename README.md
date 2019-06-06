@@ -164,7 +164,7 @@ After executing the command otu6 stays the same. Otu6 does not have hits above `
 ## Source
 Huson, D. H., Auch, A. F., Qi, J., & Schuster, S. C. (2007). MEGAN analysis of metagenomic data. Genome Research, 17(3), 377–386. http://doi.org/10.1101/gr.5969107
 
-## Getting Started
+## Installing at the local Naturalis galaxy server
 ### Prerequisites
 This tool uses specifically the BLAST output as input
 ### Installing
