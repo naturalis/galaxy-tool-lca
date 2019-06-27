@@ -128,6 +128,10 @@ def calculate_bitscore_treshold(otu):
     return topTreshold
 
 def zip_taxonomy_column(otu, topTreshold):
+	"""
+    Of all the otus that passes the threshold the taxonomy will be "zipped" https://www.w3schools.com/python/ref_func_zip.asp
+	A zipped list (zippedTaxonomy) will look like something like this: [[family, family], [genus, genus], [species, species]]
+	"""
     taxons = []
     for tax in otu:
         if float(tax[7]) >= topTreshold and float(tax[4]) >= float(args.id) and float(tax[5]) >= float(args.cov) and float(tax[7]) >= float(args.minbit):
