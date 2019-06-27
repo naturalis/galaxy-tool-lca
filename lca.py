@@ -95,22 +95,23 @@ def check_best_hit_range(otu_filtered):
     This method will be used if the user choose -t best_hit_range.
 	All the hits will be checked if they pass a certain threshold.
 	All the hits the pass the threshold with the same taxonomy will be merged to one line.
-	The lowest and highest scores (range) will be written to the last column
+	The lowest and highest scores (range) will be written to the last column.
 	"""
     hitList = {}
     output = ""
-    for x in otu_filtered:
-        if float(x[4]) >= float(args.topid) and float(x[5]) >= float(args.topcoverage):
+    for x in otu_filtered:#loop trough otus
+        if float(x[4]) >= float(args.topid) and float(x[5]) >= float(args.topcoverage):#check thresholds
             taxonomy = map(str.strip, x[-1].split(" / "))
             line = x[0] + "\tspecies\t" + taxonomy[-1] + "\t" + "\t".join(taxonomy) + "\ttop hit"
-            if line not in hitList:
+            if line not in hitList:#check if the taxonomy was already present before, if no add, if yes append
                 hitList[line] = [[float(x[4])],[float(x[5])]]
             else:
                 hitList[line][0].append(float(x[4]))
                 hitList[line][1].append(float(x[5]))
-    for y in hitList:
+    for y in hitList:#loop trough otus again, this time a few will be merged by taxonomy
         numberOfHits = str(len(hitList[y][0]))
         best = y.replace("top hit", "top hit (" + numberOfHits + ")")
+		#put the lowest and highest scores to the output
         line = best+"\t"+str(round(min(hitList[y][0]),1))+"-"+str(round(max(hitList[y][0]), 1))+"\t"+str(round(min(hitList[y][1]), 1))+"-"+str(round(max(hitList[y][1]), 1))+"\n"
         output += line
     if output:
@@ -129,7 +130,7 @@ def calculate_bitscore_treshold(otu):
 def zip_taxonomy_column(otu, topTreshold):
     taxons = []
     for tax in otu:
-        if float(tax[7]) >= topTreshold and float(tax[4]) >= float(args.id) and float(tax[5]) >= float(args.cov) and float(tax[7]) >= 50:#float(args.minbit):
+        if float(tax[7]) >= topTreshold and float(tax[4]) >= float(args.id) and float(tax[5]) >= float(args.cov) and float(tax[7]) >= float(args.minbit):
             taxons.append(map(str.strip, tax[-1].split(" / ")))
     #use zip function for all* taxon lists
     zippedTaxonomy = zip(*taxons)
@@ -171,6 +172,9 @@ def generate_output_line(taxonomy, otu):
             return otu[0][0] + "\t" + taxonLevels[taxonLevel] + "\t" + taxonomy[taxonLevel] + "\t" + "\t".join(taxonomy) + "\tlca"
 
 def get_lca(otu):
+	"""
+    This method contains a few other methods to dertermine the lca.
+	"""
     #find highest bitscore and calculate lowest bitscore treshold
     topTreshold = calculate_bitscore_treshold(otu)
 
@@ -208,9 +212,9 @@ def determine_taxonomy(otu):
             else:
                 resultingTaxonomy = get_lca(otu_filtered)
                 output.write(resultingTaxonomy+endLine)
-            if bestHit:
+            if bestHit:#if there was a best hit write the best hit to the output
                 output.write(bestHit)
-            elif args.tophit == "best_hit" or args.tophit == "best_hits_range":
+            elif args.tophit == "best_hit" or args.tophit == "best_hits_range":#if there was no best hit, check the lca
                 resultingTaxonomy = get_lca(otu_filtered)
                 output.write(resultingTaxonomy+endLine)
 
