@@ -29,6 +29,12 @@ parser.add_argument('-minbit', dest='minbit', type=str, required=False, nargs='?
 args = parser.parse_args()
 
 def filter_check(filterParam, line):
+	"""
+    This method checks if the input (line) does not contain a certain string that is present
+	in filterParam. filterParam is a comma seperated string, it will be converted to a list by
+	splitting it on the "," character. If a string present in filterParam is also present in line
+	it will return False.
+	"""
     filterHitsParam = filterParam.strip()
     if filterParam[-1] == ",":
         filterHitsParam = filterParam[:-1]
@@ -42,11 +48,15 @@ def filter_check(filterParam, line):
     return a
 
 def remove_hits(otu):
-        filteredOtu = []
-        for line in otu:
-            if filter_check(args.filterHitsParam.strip(), line[-1]):
-                filteredOtu.append(line)
-        return filteredOtu
+	"""
+	This method loops trough the lines of one otu. The taxonomy column will be the input for the filter_check() method.
+	If the method filter_check() returns True the line will be appended to the filteredOtu list.
+	"""
+    filteredOtu = []
+    for line in otu:
+        if filter_check(args.filterHitsParam.strip(), line[-1]):
+            filteredOtu.append(line)
+    return filteredOtu
 
 def remove_wrong_source_hits(otu):
     filteredOtu = []
@@ -68,6 +78,12 @@ def remove_taxon(zippedTaxonomy):
     return filteredZipper
 
 def check_best_hit(otu):
+	"""
+    This method will be used if the user choose parameter -t best_hit.
+	Before checking the LCA there will be checked if the top hit passes
+	some thresholds (args.topid, args.topcoverage). If yes, the top hit will be returned
+	and gets the tag "best hit" in the last column.
+	"""
     if float(otu[0][4]) >= float(args.topid) and float(otu[0][5]) >= float(args.topcoverage):
         taxonomy = map(str.strip, otu[0][-1].split(" / "))
         return otu[0][0] + "\tspecies\t" + taxonomy[-1] + "\t" + "\t".join(taxonomy) + "\tbest hit\n"
@@ -75,6 +91,12 @@ def check_best_hit(otu):
         return False
 
 def check_best_hit_range(otu_filtered):
+	"""
+    This method will be used if the user choose -t best_hit_range.
+	All the hits will be checked if they pass a certain threshold.
+	All the hits the pass the threshold with the same taxonomy will be merged to one line.
+	The lowest and highest scores (range) will be written to the last column
+	"""
     hitList = {}
     output = ""
     for x in otu_filtered:
@@ -163,11 +185,17 @@ def get_lca(otu):
     return outputLine
 
 def determine_taxonomy(otu):
+	"""
+    This method contains other methods to determines the output.
+	The first step is to do some filtering, if a line contain a certain word it will be removed.
+	If there are no lines left the otu gets no identification.
+	:param otu: list with all the lines of one otu
+	"""
     otu_filtered = otu
     if args.filterHitsParam.strip() and args.filterHitsParam.strip() != "none":
-        otu_filtered = remove_hits(otu_filtered)
+        otu_filtered = remove_hits(otu_filtered)#filter on args.filterHitsParam
     if args.filterSourceHits.strip():
-        otu_filtered = remove_wrong_source_hits(otu_filtered)
+        otu_filtered = remove_wrong_source_hits(otu_filtered)#filter on args.filterSourceHits
     endLine = "\n"
     with open(args.output, "a") as output:
         bestHit = ""
@@ -193,6 +221,9 @@ def determine_taxonomy(otu):
                 otu[0][0] + "\tno identification\tno identification\t" + "\t".join(taxonomy).strip() + "\tfiltered out"+endLine)
 
 def linecount():
+	"""
+    This method counts the total amount of line in the input file.
+	"""
     i = 0
     with open(args.input, "r") as f:
         for i, l in enumerate(f):
@@ -212,16 +243,20 @@ def write_header():
 def lca():
     """
     This method loops trough the BLAST output and all the hits per otu will be the input for the determine_taxonomy method.
-    The first line starts with "Query ID", this is the header so it will not be used. Every line is stored in the
-    otuLines variable.
+    The first line starts with "Query ID", this is the header so it will not be used. Every line of the same otu is stored in the
+    otuLines variable. There are multible otus in one file, only the lines of the same otu need to go in the determine_taxonomy method.
+	This works as followed: You loop trought the file (blast output) the loop just started so num is not equal to 1 so the else block
+	is used and the first line of otu1 and the name 'otu1' will be added to the lists. The second line is still otu1 and otu is present in
+	the otuList so again the else block will be used. When the loop reaches otu2, otu 2 is not present in otuLines so the otu1 line go into
+	the determine_taxonomy(otuLines) method and the lists will be emptied and the lines of otu2 will now be stored in the list.
     """
     write_header()
     lastLineCount = linecount()
     with open(args.input, "r") as input:
         otuList = []
         otuLines = []
-        for num, line in enumerate(input):
-            if line.split("\t")[0].strip() != "#Query ID":
+        for num, line in enumerate(input):#start loop
+            if line.split("\t")[0].strip() != "#Query ID":#not use the header
                 if line.split("\t")[0] not in otuList and num != 1 or num == lastLineCount:
                     if num == lastLineCount:
                         otuList.append(line.split("\t")[0])
