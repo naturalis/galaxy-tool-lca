@@ -66,6 +66,9 @@ def remove_wrong_source_hits(otu):
     return filteredOtu
 
 def remove_taxon(zippedTaxonomy):
+	"""
+
+	"""
     filteredZipper = []
     for level in zippedTaxonomy:
         filteredRank = []
@@ -141,15 +144,24 @@ def zip_taxonomy_column(otu, topTreshold):
     return zippedTaxonomy
 
 def find_lca(zippedTaxonomy):
+	"""
+    This method finds the lowest common ancestor. It make the lists in zippedTaxonomy unique
+	afther that if there are more then one different taxonomies left the loop stops.
+	example with a zipped file like this:[[family1, family1], [genus1, genus2], [species1, species2]]
+	When you make family unique the will be only one family left (family1), if you make genus unique
+	there will be two genera left. So the lowest common ancesor is family1.
+	"""
     count = 0
     taxonomy = []
     if zippedTaxonomy:
+		#change species to no identification, lca starts from genus
         zippedTaxonomy[-1] = "no identification"
     for y in zippedTaxonomy:
-        if len(set(y)) > 1:
+		#make unique and check if there are more then 1
+        if len(set(y)) > 1:#if more then 1 stop checking
             break
         count += 1
-        taxonomy.append(list(set(y))[0])
+        taxonomy.append(list(set(y))[0])#put the lca taxonomy in a variable
     t = True
     newTaxonomy = []
     for rev in reversed(taxonomy):
