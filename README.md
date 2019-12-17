@@ -155,11 +155,8 @@ After executing the command otu6 stays the same. Otu6 does not have hits above `
 | Otu9 | species | Myxine glutinosa | Eukaryota | Chordata | unknown class | Myxiniformes | Myxinidae | Myxine | Myxine glutinosa | top hit (6) | 98.7-100.0 | 100.0-100.0 |
 | Otu9 | species | Myxine limosa | Eukaryota | Chordata | unknown class | Myxiniformes | Myxinidae | Myxine | Myxine limosa | top hit (4) | 98.1-98.7 | 100.0-100.0 |
 
-## Author
-
-
 ## How to cite
-
+Beentjes KK, Speksnijder AGCL, Schilthuizen M, Hoogeveen M, Pastoor R, et al. (2019) Increased performance of DNA metabarcoding of macroinvertebrates by taxonomic sorting. PLOS ONE 14(12): e0226527. https://doi.org/10.1371/journal.pone.0226527
 
 ## Source
 Huson, D. H., Auch, A. F., Qi, J., & Schuster, S. C. (2007). MEGAN analysis of metagenomic data. Genome Research, 17(3), 377–386. http://doi.org/10.1101/gr.5969107
