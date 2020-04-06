@@ -88,7 +88,7 @@ def check_best_hit(otu):
 	and gets the tag "best hit" in the last column.
 	"""
     if float(otu[0][4]) >= float(args.topid) and float(otu[0][5]) >= float(args.topcoverage):
-        taxonomy = map(str.strip, otu[0][-1].split(" / "))
+        taxonomy = list(map(str.strip, otu[0][-1].split(" / ")))
         return otu[0][0] + "\tspecies\t" + taxonomy[-1] + "\t" + "\t".join(taxonomy) + "\tbest hit\n"
     else:
         return False
@@ -102,9 +102,15 @@ def check_best_hit_range(otu_filtered):
 	"""
     hitList = {}
     output = ""
+<<<<<<< HEAD
+    for x in otu_filtered:
+        if float(x[4]) >= float(args.topid) and float(x[5]) >= float(args.topcoverage):
+            taxonomy = list(map(str.strip, x[-1].split(" / ")))
+=======
     for x in otu_filtered:#loop trough otus
         if float(x[4]) >= float(args.topid) and float(x[5]) >= float(args.topcoverage):#check thresholds
             taxonomy = map(str.strip, x[-1].split(" / "))
+>>>>>>> 2494bde8fa1ca5dc5cf46f5be6d6b0165a7955a3
             line = x[0] + "\tspecies\t" + taxonomy[-1] + "\t" + "\t".join(taxonomy) + "\ttop hit"
             if line not in hitList:#check if the taxonomy was already present before, if no add, if yes append
                 hitList[line] = [[float(x[4])],[float(x[5])]]
@@ -137,10 +143,15 @@ def zip_taxonomy_column(otu, topTreshold):
 	"""
     taxons = []
     for tax in otu:
+<<<<<<< HEAD
+        if float(tax[7]) >= topTreshold and float(tax[4]) >= float(args.id) and float(tax[5]) >= float(args.cov) and float(tax[7]) >= 50:#float(args.minbit):
+            taxons.append(list(map(str.strip, tax[-1].split(" / "))))
+=======
         if float(tax[7]) >= topTreshold and float(tax[4]) >= float(args.id) and float(tax[5]) >= float(args.cov) and float(tax[7]) >= float(args.minbit):
             taxons.append(map(str.strip, tax[-1].split(" / ")))
+>>>>>>> 2494bde8fa1ca5dc5cf46f5be6d6b0165a7955a3
     #use zip function for all* taxon lists
-    zippedTaxonomy = zip(*taxons)
+    zippedTaxonomy = list(zip(*taxons))
     return zippedTaxonomy
 
 def find_lca(zippedTaxonomy):
