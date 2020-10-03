@@ -3,38 +3,38 @@ import argparse
 
 parser = argparse.ArgumentParser(description='')
 parser.add_argument('-i', '--input_file', metavar='galaxy blast output', dest='input', type=str,
-			help='input data in galaxy blast format', default='', required=True)
+            help='input data in galaxy blast format', default='', required=True)
 parser.add_argument('-o', '--output_file', metavar='output file', dest='output', type=str,
-			help='results file in tabular', required=True)
+            help='results file in tabular', required=True)
 parser.add_argument('-b', '--bitscore', metavar='bitscore top percentage treshold', dest='top', type=str,
-			help='top hits to find the lowest common ancestor', required=True)
+            help='top hits to find the lowest common ancestor', required=True)
 parser.add_argument('-id', metavar='identity', dest='id', type=str,
-			help='identity treshold', required=True)
+            help='identity treshold', required=True)
 parser.add_argument('-cov', metavar='coverage', dest='cov', type=str,
-			help='coverage treshold', required=True)
+            help='coverage treshold', required=True)
 parser.add_argument('-t','--tophit', metavar='tophit', dest='tophit', type=str,
-			help='Check de best hit first, if it is above the gives treshold the tophit will become the output', required=False, choices=['only_lca', 'best_hit', "best_hits_range"], nargs='?', default='only_lca')
+            help='Check de best hit first, if it is above the gives treshold the tophit will become the output', required=False, choices=['only_lca', 'best_hit', "best_hits_range"], nargs='?', default='only_lca')
 parser.add_argument('-tid', metavar='top_hit_identity', dest='topid', type=str,
-			help='identity treshold for the tophit', required=False, default='100')
+            help='identity treshold for the tophit', required=False, default='100')
 parser.add_argument('-tcov', metavar='top_hit_coverage', dest='topcoverage', type=str,
-			help='query coverage treshold for the tophit', required=False,  default='100')
+            help='query coverage treshold for the tophit', required=False,  default='100')
 parser.add_argument('-fh', metavar='filter hits', dest='filterHitsParam', type=str,
-			help='filter out hit that contain unwanted taxonomy', required=False, default="",nargs='?')
+            help='filter out hit that contain unwanted taxonomy', required=False, default="",nargs='?')
 parser.add_argument('-flh', metavar='filter lca hits', dest='filterLcaHits', type=str,
-			help='do not use a String in de lca determination', required=False, default="",nargs='?')
+            help='do not use a String in de lca determination', required=False, default="",nargs='?')
 parser.add_argument('-fs', metavar='filter on taxonomy source', dest='filterSourceHits', type=str,
-			help='do not use hit when taxonomy from source', required=False, default="",nargs='?')
+            help='do not use hit when taxonomy from source', required=False, default="",nargs='?')
 parser.add_argument('-minbit', dest='minbit', type=str, required=False, nargs='?', default="0")
 
 args = parser.parse_args()
 
 def filter_check(filterParam, line):
-	"""
+    """
     This method checks if the input (line) does not contain a certain string that is present
-	in filterParam. filterParam is a comma seperated string, it will be converted to a list by
-	splitting it on the "," character. If a string present in filterParam is also present in line
-	it will return False.
-	"""
+    in filterParam. filterParam is a comma seperated string, it will be converted to a list by
+    splitting it on the "," character. If a string present in filterParam is also present in line
+    it will return False.
+    """
     filterHitsParam = filterParam.strip()
     if filterParam[-1] == ",":
         filterHitsParam = filterParam[:-1]
@@ -48,10 +48,10 @@ def filter_check(filterParam, line):
     return a
 
 def remove_hits(otu):
-	"""
-	This method loops trough the lines of one otu. The taxonomy column will be the input for the filter_check() method.
-	If the method filter_check() returns True the line will be appended to the filteredOtu list.
-	"""
+    """
+    This method loops trough the lines of one otu. The taxonomy column will be the input for the filter_check() method.
+    If the method filter_check() returns True the line will be appended to the filteredOtu list.
+    """
     filteredOtu = []
     for line in otu:
         if filter_check(args.filterHitsParam.strip(), line[-1]):
@@ -66,9 +66,9 @@ def remove_wrong_source_hits(otu):
     return filteredOtu
 
 def remove_taxon(zippedTaxonomy):
-	"""
+    """
 
-	"""
+    """
     filteredZipper = []
     for level in zippedTaxonomy:
         filteredRank = []
@@ -81,12 +81,12 @@ def remove_taxon(zippedTaxonomy):
     return filteredZipper
 
 def check_best_hit(otu):
-	"""
+    """
     This method will be used if the user choose parameter -t best_hit.
-	Before checking the LCA there will be checked if the top hit passes
-	some thresholds (args.topid, args.topcoverage). If yes, the top hit will be returned
-	and gets the tag "best hit" in the last column.
-	"""
+    Before checking the LCA there will be checked if the top hit passes
+    some thresholds (args.topid, args.topcoverage). If yes, the top hit will be returned
+    and gets the tag "best hit" in the last column.
+    """
     if float(otu[0][4]) >= float(args.topid) and float(otu[0][5]) >= float(args.topcoverage):
         taxonomy = list(map(str.strip, otu[0][-1].split(" / ")))
         return otu[0][0] + "\tspecies\t" + taxonomy[-1] + "\t" + "\t".join(taxonomy) + "\tbest hit\n"
@@ -94,23 +94,20 @@ def check_best_hit(otu):
         return False
 
 def check_best_hit_range(otu_filtered):
-	"""
+    """
     This method will be used if the user choose -t best_hit_range.
-	All the hits will be checked if they pass a certain threshold.
-	All the hits the pass the threshold with the same taxonomy will be merged to one line.
-	The lowest and highest scores (range) will be written to the last column.
-	"""
+    All the hits will be checked if they pass a certain threshold.
+    All the hits the pass the threshold with the same taxonomy will be merged to one line.
+    The lowest and highest scores (range) will be written to the last column.
+    """
     hitList = {}
     output = ""
-<<<<<<< HEAD
     for x in otu_filtered:
         if float(x[4]) >= float(args.topid) and float(x[5]) >= float(args.topcoverage):
             taxonomy = list(map(str.strip, x[-1].split(" / ")))
-=======
-    for x in otu_filtered:#loop trough otus
-        if float(x[4]) >= float(args.topid) and float(x[5]) >= float(args.topcoverage):#check thresholds
-            taxonomy = map(str.strip, x[-1].split(" / "))
->>>>>>> 2494bde8fa1ca5dc5cf46f5be6d6b0165a7955a3
+    # for x in otu_filtered:#loop trough otus
+    #     if float(x[4]) >= float(args.topid) and float(x[5]) >= float(args.topcoverage):#check thresholds
+    #         taxonomy = map(str.strip, x[-1].split(" / "))
             line = x[0] + "\tspecies\t" + taxonomy[-1] + "\t" + "\t".join(taxonomy) + "\ttop hit"
             if line not in hitList:#check if the taxonomy was already present before, if no add, if yes append
                 hitList[line] = [[float(x[4])],[float(x[5])]]
@@ -120,7 +117,7 @@ def check_best_hit_range(otu_filtered):
     for y in hitList:#loop trough otus again, this time a few will be merged by taxonomy
         numberOfHits = str(len(hitList[y][0]))
         best = y.replace("top hit", "top hit (" + numberOfHits + ")")
-		#put the lowest and highest scores to the output
+        #put the lowest and highest scores to the output
         line = best+"\t"+str(round(min(hitList[y][0]),1))+"-"+str(round(max(hitList[y][0]), 1))+"\t"+str(round(min(hitList[y][1]), 1))+"-"+str(round(max(hitList[y][1]), 1))+"\n"
         output += line
     if output:
@@ -137,38 +134,36 @@ def calculate_bitscore_treshold(otu):
     return topTreshold
 
 def zip_taxonomy_column(otu, topTreshold):
-	"""
+    """
     Of all the otus that passes the threshold the taxonomy will be "zipped" https://www.w3schools.com/python/ref_func_zip.asp
-	A zipped list (zippedTaxonomy) will look like something like this: [[family, family], [genus, genus], [species, species]]
-	"""
+    A zipped list (zippedTaxonomy) will look like something like this: [[family, family], [genus, genus], [species, species]]
+    """
     taxons = []
     for tax in otu:
-<<<<<<< HEAD
-        if float(tax[7]) >= topTreshold and float(tax[4]) >= float(args.id) and float(tax[5]) >= float(args.cov) and float(tax[7]) >= 50:#float(args.minbit):
-            taxons.append(list(map(str.strip, tax[-1].split(" / "))))
-=======
+        # if float(tax[7]) >= topTreshold and float(tax[4]) >= float(args.id) and float(tax[5]) >= float(args.cov) and float(tax[7]) >= 50:#float(args.minbit):
         if float(tax[7]) >= topTreshold and float(tax[4]) >= float(args.id) and float(tax[5]) >= float(args.cov) and float(tax[7]) >= float(args.minbit):
-            taxons.append(map(str.strip, tax[-1].split(" / ")))
->>>>>>> 2494bde8fa1ca5dc5cf46f5be6d6b0165a7955a3
+            taxons.append(list(map(str.strip, tax[-1].split(" / "))))
+        # if float(tax[7]) >= topTreshold and float(tax[4]) >= float(args.id) and float(tax[5]) >= float(args.cov) and float(tax[7]) >= float(args.minbit):
+        #     taxons.append(map(str.strip, tax[-1].split(" / ")))
     #use zip function for all* taxon lists
     zippedTaxonomy = list(zip(*taxons))
     return zippedTaxonomy
 
 def find_lca(zippedTaxonomy):
-	"""
+    """
     This method finds the lowest common ancestor. It make the lists in zippedTaxonomy unique
-	afther that if there are more then one different taxonomies left the loop stops.
-	example with a zipped file like this:[[family1, family1], [genus1, genus2], [species1, species2]]
-	When you make family unique the will be only one family left (family1), if you make genus unique
-	there will be two genera left. So the lowest common ancesor is family1.
-	"""
+    afther that if there are more then one different taxonomies left the loop stops.
+    example with a zipped file like this:[[family1, family1], [genus1, genus2], [species1, species2]]
+    When you make family unique the will be only one family left (family1), if you make genus unique
+    there will be two genera left. So the lowest common ancesor is family1.
+    """
     count = 0
     taxonomy = []
     if zippedTaxonomy:
-		#change species to no identification, lca starts from genus
+        #change species to no identification, lca starts from genus
         zippedTaxonomy[-1] = "no identification"
     for y in zippedTaxonomy:
-		#make unique and check if there are more then 1
+        #make unique and check if there are more then 1
         if len(set(y)) > 1:#if more then 1 stop checking
             break
         count += 1
@@ -199,9 +194,9 @@ def generate_output_line(taxonomy, otu):
             return otu[0][0] + "\t" + taxonLevels[taxonLevel] + "\t" + taxonomy[taxonLevel] + "\t" + "\t".join(taxonomy) + "\tlca"
 
 def get_lca(otu):
-	"""
+    """
     This method contains a few other methods to dertermine the lca.
-	"""
+    """
     #find highest bitscore and calculate lowest bitscore treshold
     topTreshold = calculate_bitscore_treshold(otu)
 
@@ -216,12 +211,12 @@ def get_lca(otu):
     return outputLine
 
 def determine_taxonomy(otu):
-	"""
+    """
     This method contains other methods to determines the output.
-	The first step is to do some filtering, if a line contain a certain word it will be removed.
-	If there are no lines left the otu gets no identification.
-	:param otu: list with all the lines of one otu
-	"""
+    The first step is to do some filtering, if a line contain a certain word it will be removed.
+    If there are no lines left the otu gets no identification.
+    :param otu: list with all the lines of one otu
+    """
     otu_filtered = otu
     if args.filterHitsParam.strip() and args.filterHitsParam.strip() != "none":
         otu_filtered = remove_hits(otu_filtered)#filter on args.filterHitsParam
@@ -252,9 +247,9 @@ def determine_taxonomy(otu):
                 otu[0][0] + "\tno identification\tno identification\t" + "\t".join(taxonomy).strip() + "\tfiltered out"+endLine)
 
 def linecount():
-	"""
+    """
     This method counts the total amount of line in the input file.
-	"""
+    """
     i = 0
     with open(args.input, "r") as f:
         for i, l in enumerate(f):
@@ -276,10 +271,10 @@ def lca():
     This method loops trough the BLAST output and all the hits per otu will be the input for the determine_taxonomy method.
     The first line starts with "Query ID", this is the header so it will not be used. Every line of the same otu is stored in the
     otuLines variable. There are multible otus in one file, only the lines of the same otu need to go in the determine_taxonomy method.
-	This works as followed: You loop trought the file (blast output) the loop just started so num is not equal to 1 so the else block
-	is used and the first line of otu1 and the name 'otu1' will be added to the lists. The second line is still otu1 and otu is present in
-	the otuList so again the else block will be used. When the loop reaches otu2, otu 2 is not present in otuLines so the otu1 line go into
-	the determine_taxonomy(otuLines) method and the lists will be emptied and the lines of otu2 will now be stored in the list.
+    This works as followed: You loop trought the file (blast output) the loop just started so num is not equal to 1 so the else block
+    is used and the first line of otu1 and the name 'otu1' will be added to the lists. The second line is still otu1 and otu is present in
+    the otuList so again the else block will be used. When the loop reaches otu2, otu 2 is not present in otuLines so the otu1 line go into
+    the determine_taxonomy(otuLines) method and the lists will be emptied and the lines of otu2 will now be stored in the list.
     """
     write_header()
     lastLineCount = linecount()
