@@ -39,8 +39,8 @@ $minbitscore
 </command>
 	<macros>
 	<macro name="best_hit_params">
-		<param name="tophitid" type="float" label="Identity treshold" value="100" min="1" max="100"/>
-		<param name="tophitcoverage" type="float" label="Query coverage treshold"  value="100" min="1" max="100"/>
+		<param name="tophitid" type="float" label="Identity threshold" value="100" min="1" max="100"/>
+		<param name="tophitcoverage" type="float" label="Query coverage threshold"  value="100" min="1" max="100"/>
 	</macro>
 	</macros>
 <inputs>
@@ -51,8 +51,8 @@ $minbitscore
 <param name="coverage" type="float" label="Minimum coverage"  value="70" min="1" max="100"/>
 	<conditional name="setting_mode">
 					<param name="setting" type="select" multiple="false" label="Settings mode">
-						<option value="best_hit" selected="true">Output the top hit as species identification if it is above the choosen treshold</option>
-                        <option value="best_hits_range">Output all top hits above treshold</option>
+						<option value="best_hit" selected="true">Output the top hit as species identification if it is above the chosen threshold</option>
+                        <option value="best_hits_range">Output all top hits above threshold</option>
 						<option value="only_lca">Check lca on all hits</option>
 					</param>
 					<when value="best_hit">
@@ -62,9 +62,9 @@ $minbitscore
 						<expand macro="best_hit_params"/>
 					</when>
 				</conditional>
-	<param name="filterhits" type="text" label="Dont use hits containing this taxonomy:" help="Comma seperated"  value="environmental"/>
-    <param name="filterlcahits" type="text" label="Ignore rank when containing:" help="Comma seperated" value="unknown"/>
-	<param name="filtersource" type="select" multiple="true" label="Dont use hits with taxonomy from:">
+	<param name="filterhits" type="text" label="Don't use hits containing this taxonomy:" help="Comma separated"  value="environmental"/>
+    <param name="filterlcahits" type="text" label="Ignore rank when containing:" help="Comma separated" value="unknown"/>
+	<param name="filtersource" type="select" multiple="true" label="Don't use hits with taxonomy from:">
             <option value="BOLD" label="BOLD">BOLD</option>
             <option value="private_BOLD">private_BOLD</option>
             <option value="Genbank">Genbank</option>
@@ -78,7 +78,7 @@ $minbitscore
 <tests>
 <test>
 <param name="test_input" value="test_input.txt"/>
-<output name="test_outout" file="test_output.txt"/>
+<output name="test_output" file="test_output.txt"/>
 </test>
 </tests>
 <help>
