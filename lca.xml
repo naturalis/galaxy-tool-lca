@@ -1,8 +1,5 @@
 <tool id="lca" name="lowest common ancestor" version="1.1">
 	<!-- <description>Find lowest common ancestor</description>-->
-	<requirements>
-			<requirement type="package" version="3.9">python</requirement> 
-		</requirements>
 	<macros>
 		<macro name="best_hit_params">
 			<param name="tophitid" type="float" label="Identity treshold" value="100" min="1" max="100"/>
@@ -13,6 +10,9 @@
 			<param name="lca_id_delta" type="float" label="Lower threshold with this value" value="0.0" min="0.0" help="Subtract the selected value from the percentage identity threshold initially found by the 'Top unique percentage identity values to consider' option."/>
 		</macro>
 	</macros>
+	<requirements>
+			<requirement type="package" version="3.9">python</requirement> 
+	</requirements>
 	<command>
 		<![CDATA[
 			python3 '$__tool_directory__/lca.py'
@@ -42,48 +42,49 @@
 		]]>
 	</command>
 	<inputs>
-	<param format="tabular" name="input" type="data" label="BLAST output file"/>
-	<param name="bitscore" type="float" label="Top bitscore percentage cutoff"  value="8" min="1" max="100"/>
-	<param name="minbitscore" type="integer" label="Minimum bitscore"  value="100" min="1" max="1000"/>
-	<param name="identity" type="float" label="Minimum identity"  value="80" min="1" max="100"/>
-	<param name="coverage" type="float" label="Minimum coverage"  value="70" min="1" max="100"/>
+		<param format="tabular" name="input" type="data" label="BLAST output file"/>
+		<param name="bitscore" type="float" label="Top bitscore percentage cutoff"  value="8" min="1" max="100"/>
+		<param name="minbitscore" type="integer" label="Minimum bitscore"  value="100" min="1" max="1000"/>
+		<param name="identity" type="float" label="Minimum identity"  value="80" min="1" max="100"/>
+		<param name="coverage" type="float" label="Minimum coverage"  value="70" min="1" max="100"/>
 		<conditional name="setting_mode">
-						<param name="setting" type="select" multiple="false" label="Settings mode">
-							<option value="best_hit" selected="true">Output the top hit as species identification if it is above the choosen treshold</option>
-							<option value="best_hits_range">Output all top hits above treshold</option>
-							<option value="only_lca">Check lca on all hits</option>
-							<option value="lca_threshold">Compute LCA on all hits above threshold</option>
-						</param>
-						<when value="best_hit">
-							<expand macro="best_hit_params"/>
-						</when>
-						<when value="best_hits_range">
-							<expand macro="best_hit_params"/>
-						</when>
-						<when value="lca_threshold">
-							<expand macro="lca_threshold_params"/>
-						</when>
-					</conditional>
+			<param name="setting" type="select" multiple="false" label="Settings mode">
+				<option value="best_hit" selected="true">Output the top hit as species identification if it is above the choosen treshold</option>
+				<option value="best_hits_range">Output all top hits above treshold</option>
+				<option value="only_lca">Check lca on all hits</option>
+				<option value="lca_threshold">Compute LCA on all hits above threshold</option>
+			</param>
+			<when value="best_hit">
+				<expand macro="best_hit_params"/>
+			</when>
+			<when value="best_hits_range">
+				<expand macro="best_hit_params"/>
+			</when>
+			<when value="lca_threshold">
+				<expand macro="lca_threshold_params"/>
+			</when>
+			<when value="only_lca"/>
+		</conditional>
 		<param name="filterhits" type="text" label="Dont use hits containing this taxonomy:" help="Comma seperated"  value="environmental"/>
 		<param name="filterlcahits" type="text" label="Ignore rank when containing:" help="Comma seperated" value="unknown"/>
 		<param name="filtersource" type="select" multiple="true" label="Dont use hits with taxonomy from:">
-				<option value="BOLD">BOLD</option>
-				<option value="private_BOLD">private_BOLD</option>
-				<option value="Genbank">Genbank</option>
-			</param>
+			<option value="BOLD">BOLD</option>
+			<option value="private_BOLD">private_BOLD</option>
+			<option value="Genbank">Genbank</option>
+		</param>
 	</inputs>
 
 
 	<outputs>
 		<data format="tabular" name="output" label="$input.display_name lca" />
 	</outputs>
-	<!-- <tests>
-	<test>
-	<param name="test_input" value="test_input.txt"/>
-	<output name="test_outout" file="test_output.txt"/>
-	</test>
-	</tests> -->
+	<tests>
+		<test>
+			<param name="input" value="test_input.txt"/>
+			<output name="output" file="test_output.txt"/>
+		</test>
+	</tests>
 	<help>
-	Find lca from blast output
+		Find lca from blast output
 	</help>
 </tool>
