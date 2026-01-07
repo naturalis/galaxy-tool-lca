@@ -1,33 +1,51 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+
+# Define a type to define limits for lca_id_top parameter
+def lca_id_top_type(topn: str or int):
+    topn = int(topn)
+    if topn < 1:
+        raise argparse.ArgumentTypeError("Minimum top hits is 1")
+    return topn
+
+# Define a type to define limits for lca_id_delta parameter
+def lca_id_delta_type(delta: str or float):
+    delta = float(delta)
+    if delta < 0.0:
+        raise argparse.ArgumentTypeError("Minimum top delta is 0.0")
+    return delta
+
 import argparse
 
 parser = argparse.ArgumentParser(description='')
 parser.add_argument('-i', '--input_file', metavar='galaxy blast output', dest='input', type=str,
-                    help='input data in galaxy blast format', default='', required=True)
+            help='input data in galaxy blast format', default='', required=True)
 parser.add_argument('-o', '--output_file', metavar='output file', dest='output', type=str,
-                    help='results file in tabular', required=True)
-parser.add_argument('-b', '--bitscore', metavar='bitscore top percentage threshold', dest='top', type=str,
-                    help='top hits to find the lowest common ancestor', required=True)
+            help='results file in tabular', required=True)
+parser.add_argument('-b', '--bitscore', metavar='bitscore top percentage treshold', dest='top', type=str,
+            help='top hits to find the lowest common ancestor', required=True)
 parser.add_argument('-id', metavar='identity', dest='id', type=str,
-                    help='identity threshold', required=True)
+            help='identity treshold', required=True)
 parser.add_argument('-cov', metavar='coverage', dest='cov', type=str,
-                    help='coverage threshold', required=True)
+            help='coverage treshold', required=True)
 parser.add_argument('-t','--tophit', metavar='tophit', dest='tophit', type=str,
-                    help='Check the best hit first, if it is above the gives threshold the tophit will become the output', required=False, choices=['only_lca', 'best_hit', "best_hits_range"], nargs='?', default='only_lca')
+            help='Check de best hit first, if it is above the gives treshold the tophit will become the output', required=False, choices=['only_lca', 'lca_threshold', 'best_hit', "best_hits_range"], nargs='?', default='only_lca')
 parser.add_argument('-tid', metavar='top_hit_identity', dest='topid', type=str,
-                    help='identity threshold for the tophit', required=False, default='100')
+            help='identity treshold for the tophit', required=False, default='100')
+parser.add_argument('--lca_id_top', type = lca_id_top_type, default = 1, required = False,
+            help = 'When using `--tophit lca_threshold`, use this many unique top hit values')
+parser.add_argument('--lca_id_delta', type = lca_id_delta_type, default = 0, required = False,
+            help = 'When using `--tophit lca_threshold`, allow this amount of deviation below the top hit')
 parser.add_argument('-tcov', metavar='top_hit_coverage', dest='topcoverage', type=str,
-                    help='query coverage threshold for the tophit', required=False, default='100')
+            help='query coverage treshold for the tophit', required=False,  default='100')
 parser.add_argument('-fh', metavar='filter hits', dest='filterHitsParam', type=str,
-                    help='filter out hits that contain unwanted taxonomy', required=False, default="", nargs='?')
+            help='filter out hit that contain unwanted taxonomy', required=False, default="",nargs='?')
 parser.add_argument('-flh', metavar='filter lca hits', dest='filterLcaHits', type=str,
-                    help='do not use a String in de lca determination', required=False, default="", nargs='?')
+            help='do not use a String in de lca determination', required=False, default="",nargs='?')
 parser.add_argument('-fs', metavar='filter on taxonomy source', dest='filterSourceHits', type=str,
-                    help='do not use hit when taxonomy from source', required=False, default="", nargs='?')
+            help='do not use hit when taxonomy from source', required=False, default="",nargs='?')
 parser.add_argument('-minbit', dest='minbit', type=str, required=False, nargs='?', default="0")
 
 args = parser.parse_args()
-
 
 def filter_check(filterParam, line):
     """
