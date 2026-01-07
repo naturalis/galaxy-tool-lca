@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 import argparse
 
 parser = argparse.ArgumentParser(description='')
@@ -12,9 +12,8 @@ parser.add_argument('-id', metavar='identity', dest='id', type=str,
                     help='identity threshold', required=True)
 parser.add_argument('-cov', metavar='coverage', dest='cov', type=str,
                     help='coverage threshold', required=True)
-parser.add_argument('-t', '--tophit', metavar='tophit', dest='tophit', type=str,
-                    help='Check de best hit first, if it is above the gives threshold the tophit will become the output',
-                    required=False, choices=['only_lca', 'best_hit', "best_hits_range"], nargs='?', default='only_lca')
+parser.add_argument('-t','--tophit', metavar='tophit', dest='tophit', type=str,
+                    help='Check the best hit first, if it is above the gives threshold the tophit will become the output', required=False, choices=['only_lca', 'best_hit', "best_hits_range"], nargs='?', default='only_lca')
 parser.add_argument('-tid', metavar='top_hit_identity', dest='topid', type=str,
                     help='identity threshold for the tophit', required=False, default='100')
 parser.add_argument('-tcov', metavar='top_hit_coverage', dest='topcoverage', type=str,
@@ -134,27 +133,27 @@ def check_best_hit_range(otu_filtered):
         return False
 
 
-def calculate_bitscore_treshold(otu):
+def calculate_bitscore_threshold(otu):
     highestScore = 0
     for x in otu:
         bitscore = float(x[7])
         highestScore = bitscore if bitscore > highestScore else highestScore
-    topTreshold = float(highestScore) * (1 - (float(args.top) / 100))
-    return topTreshold
+    topthreshold = float(highestScore) * (1 - (float(args.top) / 100))
+    return topthreshold
 
 
-def zip_taxonomy_column(otu, topTreshold):
+def zip_taxonomy_column(otu, topthreshold):
     """
     Of all the otus that passes the threshold the taxonomy will be "zipped" https://www.w3schools.com/python/ref_func_zip.asp
     A zipped list (zippedTaxonomy) will look like something like this: [[family, family], [genus, genus], [species, species]]
     """
     taxons = []
     for tax in otu:
-        # if float(tax[7]) >= topTreshold and float(tax[4]) >= float(args.id) and float(tax[5]) >= float(args.cov) and float(tax[7]) >= 50:#float(args.minbit):
-        if float(tax[7]) >= topTreshold and float(tax[4]) >= float(args.id) and float(tax[5]) >= float(
+        # if float(tax[7]) >= topthreshold and float(tax[4]) >= float(args.id) and float(tax[5]) >= float(args.cov) and float(tax[7]) >= 50:#float(args.minbit):
+        if float(tax[7]) >= topthreshold and float(tax[4]) >= float(args.id) and float(tax[5]) >= float(
                 args.cov) and float(tax[7]) >= float(args.minbit):
             taxons.append(list(map(str.strip, tax[-1].split(" / "))))
-        # if float(tax[7]) >= topTreshold and float(tax[4]) >= float(args.id) and float(tax[5]) >= float(args.cov) and float(tax[7]) >= float(args.minbit):
+        # if float(tax[7]) >= topthreshold and float(tax[4]) >= float(args.id) and float(tax[5]) >= float(args.cov) and float(tax[7]) >= float(args.minbit):
         #     taxons.append(map(str.strip, tax[-1].split(" / ")))
     # use zip function for all* taxon lists
     zippedTaxonomy = list(zip(*taxons))
@@ -214,10 +213,10 @@ def get_lca(otu):
     This method contains a few other methods to determine the lca.
     """
     # find highest bitscore and calculate lowest bitscore threshold
-    topTreshold = calculate_bitscore_treshold(otu)
+    topthreshold = calculate_bitscore_threshold(otu)
 
     # place the taxon column in lists for the zip function
-    zippedTaxonomy = zip_taxonomy_column(otu, topTreshold)
+    zippedTaxonomy = zip_taxonomy_column(otu, topthreshold)
 
     # filter the taxonomy levels, taxons that match 'filter lca hits' parameters are removed
     if args.filterLcaHits:
@@ -226,8 +225,25 @@ def get_lca(otu):
     outputLine = generate_output_line(find_lca(zippedTaxonomy), otu)
     return outputLine
 
+def threshold_filter(otu_array: list[list[str]], identity_array: dict[str, list[float]], topn: int = 1, topdelta: float = 0) -> list[list[str]]:
+    """
+    Filter OTU hits by the percentage identity found among the hits for individual OTUs. By default, the highest unique percentage identity is used.
+    Using the topn argument, users can select a lower value among the given unique percentage identities. The topdelta parameter can be used to subtract
+    a set value from the resulting percentage identity threshold.
+    Example: given the following array of percentage identities [100.0, 99.0, 98.0, 90.0] the following final threshold will be computed:
+        topn = 1, topdelta = 0.0: 100.0
+        topn = 3, topdelta = 0.0: 98.0
+        topn = 3, topdelta = 20.0: 78.0
+    OTU hits below the resulting threshold will not be used to infer taxonomy based on LCA. 
+    """
+    filtered_otu_array = []
+    for otu in otu_array:
+        # print(float(min(sorted(set(identity_array[otu[0]]), reverse = True)[0:topn])) - topdelta) # Uncomment this line to check percentage identity value
+        if float(otu[4]) >= float(min(sorted(set(identity_array[otu[0]]), reverse = True)[0:topn])) - topdelta:
+            filtered_otu_array.append(otu)
+    return filtered_otu_array
 
-def determine_taxonomy(otu):
+def determine_taxonomy(otu, identity_array = None):
     """
     This method contains other methods to determine the output.
     The first step is to do some filtering, if a line contains a certain word it will be removed.
@@ -248,6 +264,11 @@ def determine_taxonomy(otu):
             elif args.tophit == "best_hits_range":
                 endLine = "\t\t\n"
                 bestHit = check_best_hit_range(otu_filtered)
+            elif args.tophit == "lca_threshold":
+                threshold_passed_otu = threshold_filter(otu_filtered, identity_array, args.lca_id_top, args.lca_id_delta)
+                if threshold_passed_otu:
+                    resultingTaxonomy = get_lca(threshold_passed_otu)
+                    output.write(resultingTaxonomy+endLine)
             else:
                 resultingTaxonomy = get_lca(otu_filtered)
                 output.write(resultingTaxonomy + endLine)
@@ -289,6 +310,38 @@ def write_header():
                 "#Query\t#lca rank\t#lca taxon\t#kingdom\t#phylum\t#class\t#order\t#family\t#genus\t#species\t#method\n")
 
 
+def get_highest_identity_per_otu(blast_otu_file_path: str) -> dict[str, list[float]]:
+    """
+    This function reads the lines of the BLAST OTU table supplied with the -i parameter. The output will be a dictionary where each key is
+    an OTU id found in the input file, and the value will be a list containing the identity percentages from all hits of a specific OTU id.
+    """
+    identity_per_otu = {}
+    with open(blast_otu_file_path) as input:
+        for line in input:
+            if line.split("\t")[0].strip() != "#Query ID":
+                line_items = line.split("\t")
+                if line_items[0] not in identity_per_otu.keys():
+                    identity_per_otu[line_items[0]] = []
+                identity_per_otu[line_items[0]].append(float(line_items[4]))
+    return identity_per_otu
+
+
+def get_highest_identity_per_otu(blast_otu_file_path: str) -> dict[str, list[float]]:
+    """
+    This function reads the lines of the BLAST OTU table supplied with the -i parameter. The output will be a dictionary where each key is
+    an OTU id found in the input file, and the value will be a list containing the identity percentages from all hits of a specific OTU id.
+    """
+    identity_per_otu = {}
+    with open(blast_otu_file_path) as input:
+        for line in input:
+            if line.split("\t")[0].strip() != "#Query ID":
+                line_items = line.split("\t")
+                if line_items[0] not in identity_per_otu.keys():
+                    identity_per_otu[line_items[0]] = []
+                identity_per_otu[line_items[0]].append(float(line_items[4]))
+    return identity_per_otu
+
+
 def lca():
     """
     This method loops through the BLAST output and all the hits per otu will be the input for the determine_taxonomy method.
@@ -301,6 +354,8 @@ def lca():
     """
     write_header()
     lastLineCount = linecount()
+    if args.tophit == "lca_threshold":
+        identity_value_list = get_highest_identity_per_otu(args.input)
     with open(args.input, "r") as input:
         otuList = []
         otuLines = []
@@ -310,7 +365,10 @@ def lca():
                     if num == lastLineCount:
                         otuList.append(line.split("\t")[0])
                         otuLines.append(line.split("\t"))
-                    determine_taxonomy(otuLines)  # find the lca for the query
+                    if args.tophit == "lca_threshold":
+                        determine_taxonomy(otuLines, identity_value_list)
+                    else:
+                        determine_taxonomy(otuLines)#find the lca for the query
                     otuList = []
                     otuLines = []
                     otuList.append(line.split("\t")[0])
