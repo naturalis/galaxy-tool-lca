@@ -21,22 +21,22 @@ parser.add_argument('-i', '--input_file', metavar='galaxy blast output', dest='i
             help='input data in galaxy blast format', default='', required=True)
 parser.add_argument('-o', '--output_file', metavar='output file', dest='output', type=str,
             help='results file in tabular', required=True)
-parser.add_argument('-b', '--bitscore', metavar='bitscore top percentage treshold', dest='top', type=str,
+parser.add_argument('-b', '--bitscore', metavar='bitscore top percentage threshold', dest='top', type=str,
             help='top hits to find the lowest common ancestor', required=True)
 parser.add_argument('-id', metavar='identity', dest='id', type=str,
-            help='identity treshold', required=True)
+            help='identity threshold', required=True)
 parser.add_argument('-cov', metavar='coverage', dest='cov', type=str,
-            help='coverage treshold', required=True)
+            help='coverage threshold', required=True)
 parser.add_argument('-t','--tophit', metavar='tophit', dest='tophit', type=str,
-            help='Check de best hit first, if it is above the gives treshold the tophit will become the output', required=False, choices=['only_lca', 'lca_threshold', 'best_hit', "best_hits_range"], nargs='?', default='only_lca')
+            help='Check the best hit first, if it is above the gives threshold the top hit will become the output', required=False, choices=['only_lca', 'lca_threshold', 'best_hit', "best_hits_range"], nargs='?', default='only_lca')
 parser.add_argument('-tid', metavar='top_hit_identity', dest='topid', type=str,
-            help='identity treshold for the tophit', required=False, default='100')
+            help='identity threshold for the top hit', required=False, default='100')
 parser.add_argument('--lca_id_top', type = lca_id_top_type, default = 1, required = False,
             help = 'When using `--tophit lca_threshold`, use this many unique top hit values')
 parser.add_argument('--lca_id_delta', type = lca_id_delta_type, default = 0, required = False,
             help = 'When using `--tophit lca_threshold`, allow this amount of deviation below the top hit')
 parser.add_argument('-tcov', metavar='top_hit_coverage', dest='topcoverage', type=str,
-            help='query coverage treshold for the tophit', required=False,  default='100')
+            help='query coverage threshold for the top hit', required=False,  default='100')
 parser.add_argument('-fh', metavar='filter hits', dest='filterHitsParam', type=str,
             help='filter out hit that contain unwanted taxonomy', required=False, default="",nargs='?')
 parser.add_argument('-flh', metavar='filter lca hits', dest='filterLcaHits', type=str,
